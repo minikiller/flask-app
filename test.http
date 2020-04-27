@@ -1,0 +1,7 @@
+POST http://106.12.216.163:3000/postdata
+Content-Type: application/json
+
+{
+    "name": "sample"
+}
+
