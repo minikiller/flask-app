@@ -1,6 +1,7 @@
 from flask import Flask, jsonify,request
 import json
 from flask_basicauth import BasicAuth
+import random
 
 app = Flask(__name__)
 app.config['BASIC_AUTH_USERNAME'] = 'hello'
@@ -22,5 +23,20 @@ def sunlf():
     print(request.json)
     return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
 
+class Data():
+    def __init__(self,humid,temp):
+        self.humid=humid
+        self.temp=temp
+
+class MyEncoder(json.JSONEncoder):
+    def default(self, o):
+        return o.__dict__
+
+@app.route('/getdata', methods=['GET'])
+def getData():
+    data=Data( random.randint(1,10), random.randint(10,20))
+    return json.dumps(data,cls=MyEncoder), 200, {'ContentType':'application/json'} 
+
+ 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
