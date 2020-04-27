@@ -43,12 +43,12 @@ def getData():
     return json.dumps(data, cls=MyEncoder), 200, {'ContentType': 'application/json'}
 
 
-@app.route('/postdata/<asset_id>', methods=['POST'])
-def postData(asset_id):
-
-    print("get request, json data is {},device_id is {}".format(
-        request.json, asset_id))
-    return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+@app.route('/postdata/<device_id>', methods=['POST'])
+def postData(device_id):   
+    device_name = request.headers['device_name'] # get header
+    print("get request, json data is {},device_id is {},device name is {}".format(
+        request.json, device_id,device_name))
+    return json.dumps({'result': "succeed"}), 200, {'ContentType': 'application/json'}
 
 
 if __name__ == '__main__':
