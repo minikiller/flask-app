@@ -37,6 +37,11 @@ def getData():
     data=Data( random.randint(1,10), random.randint(10,20))
     return json.dumps(data,cls=MyEncoder), 200, {'ContentType':'application/json'} 
 
- 
+@app.route('/postdata', methods=['POST'])
+def postData():
+    print("get request, json data is {}".format(request.json))
+    return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=3000)
