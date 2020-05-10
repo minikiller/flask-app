@@ -5,3 +5,21 @@ Content-Type: application/json
     "name": "sample"
 }
 
+### 
+POST http://localhost:3000/sunlf
+Content-Type: application/json
+Authorization: Basic hello:123
+
+{
+    "name": "sample"
+}
+
+### 
+POST http://localhost:3000/user
+Content-Type: application/json
+# Authorization: Basic hello:123
+
+{
+    "username": "sample6",
+    "email": "hello@qq.com65"
+}

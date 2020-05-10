@@ -1,0 +1,27 @@
+POST http://localhost:5000/user
+Content-Type: application/json
+
+{
+    "name": "admin",
+    "password": "12345"
+}
+
+### login
+GET http://localhost:5000/login HTTP/1.1
+Authorization: Basic admin:12345
+ 
+### get all users
+
+GET http://localhost:5000/user HTTP/1.1
+x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiI0ZjAzYTA2OS02ZjhlLTQwMjYtYTg4NC05YTAzNGRmM2I1MTUiLCJleHAiOjE1ODkwNzQwMzB9.V-GFuEXU0_kzs0n6lFXDsqYeGOfY1OMrCK2hXgh9M6Q
+
+### create a new user
+
+POST http://localhost:5000/user HTTP/1.1
+x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiI0ZjAzYTA2OS02ZjhlLTQwMjYtYTg4NC05YTAzNGRmM2I1MTUiLCJleHAiOjE1ODkwNzQwMzB9.V-GFuEXU0_kzs0n6lFXDsqYeGOfY1OMrCK2hXgh9M6Q
+Content-Type: application/json
+
+{
+    "name": "sunlf",
+    "password": "kalix"
+}

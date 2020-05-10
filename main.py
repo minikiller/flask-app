@@ -32,15 +32,10 @@ class Data():
         self.temp = temp
 
 
-class MyEncoder(json.JSONEncoder):
-    def default(self, o):
-        return o.__dict__
-
-
 @app.route('/getdata', methods=['GET'])
 def getData():
     data = Data(random.randint(1, 10), random.randint(10, 20))
-    return json.dumps(data, cls=MyEncoder), 200, {'ContentType': 'application/json'}
+    return json.dumps(data.__dict__), 200, {'ContentType': 'application/json'}
 
 
 @app.route('/postdata/<device_id>', methods=['POST'])
