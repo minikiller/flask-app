@@ -77,7 +77,7 @@ def get_all_users(current_user):
         user_data['admin'] = user.admin
         output.append(user_data)
 
-    return jsonify({'users': output})
+    return jsonify(output)
 
 
 @app.route('/users/<public_id>', methods=['GET'])
@@ -101,12 +101,20 @@ def get_one_user(current_user, public_id):
     return jsonify({'user': user_data})
 
 
+@app.route('/users/register', methods=['POST'])
+def create_user_register():
+    return addUser()
+
+
 @app.route('/users', methods=['POST'])
 @token_required
 def create_user(current_user):
     if not current_user.admin:
         return jsonify({'message': 'Cannot perform that function!'})
+    return addUser()
 
+
+def addUser():
     data = request.get_json()
 
     hashed_password = generate_password_hash(data['password'], method='sha256')
@@ -169,7 +177,7 @@ def login():
         token = jwt.encode({'public_id': user.public_id, 'exp': datetime.datetime.utcnow(
         ) + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'])
 
-        return jsonify({'token': token.decode('UTF-8')})
+        return jsonify({'id': user.id, 'name': user.name, 'token': token.decode('UTF-8')})
 
     return make_response('Could not verify', 401, {'WWW-Authenticate': 'Basic realm="Login required!"'})
 
