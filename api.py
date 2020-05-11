@@ -6,8 +6,10 @@ import jwt
 import datetime
 from functools import wraps
 import os
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 app.config['SECRET_KEY'] = 'thisissecret'
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -56,7 +58,7 @@ def token_required(f):
     return decorated
 
 
-@app.route('/user', methods=['GET'])
+@app.route('/users', methods=['GET'])
 @token_required
 def get_all_users(current_user):
 
@@ -78,7 +80,7 @@ def get_all_users(current_user):
     return jsonify({'users': output})
 
 
-@app.route('/user/<public_id>', methods=['GET'])
+@app.route('/users/<public_id>', methods=['GET'])
 @token_required
 def get_one_user(current_user, public_id):
 
@@ -99,7 +101,7 @@ def get_one_user(current_user, public_id):
     return jsonify({'user': user_data})
 
 
-@app.route('/user', methods=['POST'])
+@app.route('/users', methods=['POST'])
 @token_required
 def create_user(current_user):
     if not current_user.admin:
@@ -117,7 +119,7 @@ def create_user(current_user):
     return jsonify({'message': 'New user created!'})
 
 
-@app.route('/user/<public_id>', methods=['PUT'])
+@app.route('/users/<public_id>', methods=['PUT'])
 @token_required
 def promote_user(current_user, public_id):
     if not current_user.admin:
@@ -134,7 +136,7 @@ def promote_user(current_user, public_id):
     return jsonify({'message': 'The user has been promoted!'})
 
 
-@app.route('/user/<public_id>', methods=['DELETE'])
+@app.route('/users/<public_id>', methods=['DELETE'])
 @token_required
 def delete_user(current_user, public_id):
     if not current_user.admin:
