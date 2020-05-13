@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 from flask import Flask, request, jsonify, make_response
 from flask_sqlalchemy import SQLAlchemy
 import uuid
@@ -7,6 +9,7 @@ import datetime
 from functools import wraps
 import os
 from flask_cors import CORS
+import datetime
 
 app = Flask(__name__)
 CORS(app)
@@ -33,6 +36,43 @@ class Todo(db.Model):
     text = db.Column(db.String(50))
     complete = db.Column(db.Boolean)
     user_id = db.Column(db.Integer)
+
+
+"""游戏对局室
+
+Returns:
+    [type] -- [description]
+"""
+
+
+class Game(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+    complete = db.Column(db.Boolean)
+    user_id = db.Column(db.Integer)
+    comment = db.Column(db.String(50))
+    blackone_id = db.Column(db.Integer)
+    blacktwo_id = db.Column(db.Integer)
+    whiteone_id = db.Column(db.Integer)
+    whitetwo_id = db.Column(db.Integer)
+    create_date = db.Column(db.Date)
+    dur_date = db.Column(db.Date)
+
+
+"""棋谱信息
+
+Returns:
+    [type] -- [description]
+"""
+
+
+class Kifu(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    create_date = db.Column(db.Date)
+    user_id = db.Column(db.Integer)
+    kifu_data = db.Column(db.String(1500))
+    black_info = db.Column(db.String(50))
+    white_info = db.Column(db.String(50))
 
 
 def token_required(f):
@@ -253,6 +293,132 @@ def delete_todo(current_user, todo_id):
     db.session.commit()
 
     return jsonify({'message': 'Todo item deleted!'})
+
+
+@app.route('/games', methods=['GET'])
+@token_required
+def get_all_games(current_user):
+    games = Game.query.filter_by(user_id=current_user.id).all()
+
+    output = []
+
+    for game in games:
+        game_data = {}
+        game_data['id'] = game.id
+        game_data['text'] = game.text
+        game_data['complete'] = game.complete
+        output.append(game_data)
+
+    return jsonify({'games': output})
+
+
+@app.route('/games/<game_id>', methods=['GET'])
+@token_required
+def get_one_game(current_user, game_id):
+    game = Game.query.filter_by(id=game_id, user_id=current_user.id).first()
+
+    if not game:
+        return jsonify({'message': 'No game found!'})
+
+    game_data = {}
+    game_data['id'] = game.id
+    game_data['text'] = game.text
+    game_data['complete'] = game.complete
+
+    return jsonify(game_data)
+
+
+@app.route('/games', methods=['POST'])
+@token_required
+def create_game(current_user):
+    data = request.get_json()
+# TODO add data
+    new_game = Game(text=data['text'], complete=False, user_id=current_user.id)
+    db.session.add(new_game)
+    db.session.commit()
+
+    return jsonify({'message': "Game created!"})
+
+
+@app.route('/games/<game_id>', methods=['PUT'])
+@token_required
+def complete_game(current_user, game_id):
+    game = Game.query.filter_by(id=game_id, user_id=current_user.id).first()
+
+    if not game:
+        return jsonify({'message': 'No game found!'})
+
+    game.complete = True
+    db.session.commit()
+
+    return jsonify({'message': 'Game item has been completed!'})
+
+
+@app.route('/games/<game_id>', methods=['DELETE'])
+@token_required
+def delete_game(current_user, game_id):
+    game = Game.query.filter_by(id=game_id, user_id=current_user.id).first()
+
+    if not game:
+        return jsonify({'message': 'No game found!'})
+
+    db.session.delete(game)
+    db.session.commit()
+
+    return jsonify({'message': 'Game item deleted!'})
+
+
+@app.route('/kifus', methods=['POST'])
+@token_required
+def create_kifu(current_user):
+    data = request.get_json()
+    now_time = datetime.datetime.now()
+    new_kifu = Kifu(kifu_data=data['kifu_data'], create_date=now_time,
+                    user_id=current_user.id, black_info=data['black_info'],
+                    white_info=data['white_info'])
+    db.session.add(new_kifu)
+    db.session.commit()
+
+    return jsonify({'message': "Kifu created!"})
+
+
+@app.route('/kifus', methods=['GET'])
+@token_required
+def get_all_kifus(current_user):
+    kifus = Kifu.query.filter_by(user_id=current_user.id).all()
+
+    output = []
+
+    for kifu in kifus:
+        kifu_data = {}
+        kifu_data['id'] = kifu.id
+        kifu_data['kifu_data'] = kifu.kifu_data
+        kifu_data['user_id'] = kifu.user_id
+        kifu_data['black_info'] = kifu.black_info
+        kifu_data['white_info'] = kifu.white_info
+        kifu_data['create_date'] = kifu.create_date
+        output.append(kifu_data)
+
+    return jsonify({'kifus': output})
+
+
+@app.route('/kifus/<kifu_id>', methods=['GET'])
+@token_required
+def download_one_kifu(current_user, kifu_id):
+    kifu = Kifu.query.filter_by(id=kifu_id, user_id=current_user.id).first()
+
+    if not kifu:
+        return jsonify({'message': 'No kifu found!'})
+
+    kifu_data = {}
+    kifu_data['id'] = kifu.id
+    kifu_data['kifu_data'] = kifu.kifu_data
+    kifu_data['user_id'] = kifu.user_id
+    kifu_data['black_info'] = kifu.black_info
+    kifu_data['white_info'] = kifu.white_info
+    kifu_data['create_date'] = kifu.create_date
+
+    return jsonify(kifu_data)
 
 
 if __name__ == '__main__':
