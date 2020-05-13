@@ -77,7 +77,7 @@ def get_all_users(current_user):
         user_data['admin'] = user.admin
         output.append(user_data)
 
-    return jsonify({'users': output})
+    return jsonify(output)
 
 
 @app.route('/users/<public_id>', methods=['GET'])
@@ -102,10 +102,10 @@ def get_one_user(current_user, public_id):
 
 
 @app.route('/users', methods=['POST'])
-@token_required
-def create_user(current_user):
-    if not current_user.admin:
-        return jsonify({'message': 'Cannot perform that function!'})
+# @token_required
+def create_user():
+    # if not current_user.admin:
+    #     return jsonify({'message': 'Cannot perform that function!'})
 
     data = request.get_json()
 
