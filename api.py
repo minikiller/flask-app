@@ -184,11 +184,7 @@ def login():
         token = jwt.encode({'public_id': user.public_id, 'exp': datetime.datetime.utcnow(
         ) + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'])
 
-<<<<<<< HEAD
-        return jsonify({'id': user.id, 'name': user.name, 'token': token.decode('UTF-8')})
-=======
         return jsonify({'token': token.decode('UTF-8'), 'public_id': user.public_id, 'name': user.name})
->>>>>>> 1d4b0dc56f9c9b0b9aa62e79e273547e4d091d97
 
     return make_response('Could not verify', 401, {'WWW-Authenticate': 'Basic realm="Login required!"'})
 
