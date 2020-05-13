@@ -25,3 +25,20 @@ Content-Type: application/json
     "name": "sunlf",
     "password": "kalix"
 }
+
+### create a new kifu
+
+POST http://localhost:5000/kifus HTTP/1.1
+x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiI0ZjAzYTA2OS02ZjhlLTQwMjYtYTg4NC05YTAzNGRmM2I1MTUiLCJleHAiOjE1ODkzODI2ODl9.XsBfDKLXTWoC5JG_2eOdyN3Fw7AvtdsV4bIs9sJbrOc
+Content-Type: application/json
+
+{
+    "kifu_data": "sunlf1232434",
+    "black_info": "kalix1212erer",
+    "white_info": "kalixwewew1212erer"
+}
+
+### create a new kifu
+
+GET http://localhost:5000/kifus HTTP/1.1
+x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiI0ZjAzYTA2OS02ZjhlLTQwMjYtYTg4NC05YTAzNGRmM2I1MTUiLCJleHAiOjE1ODkzODI2ODl9.XsBfDKLXTWoC5JG_2eOdyN3Fw7AvtdsV4bIs9sJbrOc

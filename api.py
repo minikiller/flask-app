@@ -9,7 +9,7 @@ import datetime
 from functools import wraps
 import os
 from flask_cors import CORS
-import datetime
+
 
 app = Flask(__name__)
 CORS(app)
@@ -55,8 +55,8 @@ class Game(db.Model):
     blacktwo_id = db.Column(db.Integer)
     whiteone_id = db.Column(db.Integer)
     whitetwo_id = db.Column(db.Integer)
-    create_date = db.Column(db.Date)
-    dur_date = db.Column(db.Date)
+    create_date = db.Column(db.DateTime)
+    dur_date = db.Column(db.DateTime)
 
 
 """棋谱信息
@@ -68,7 +68,7 @@ Returns:
 
 class Kifu(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    create_date = db.Column(db.Date)
+    create_date = db.Column(db.DateTime)
     user_id = db.Column(db.Integer)
     kifu_data = db.Column(db.String(1500))
     black_info = db.Column(db.String(50))
@@ -373,6 +373,7 @@ def delete_game(current_user, game_id):
 def create_kifu(current_user):
     data = request.get_json()
     now_time = datetime.datetime.now()
+    # .strftime('%Y-%m-%d %H:%M:%S')
     new_kifu = Kifu(kifu_data=data['kifu_data'], create_date=now_time,
                     user_id=current_user.id, black_info=data['black_info'],
                     white_info=data['white_info'])
@@ -396,7 +397,8 @@ def get_all_kifus(current_user):
         kifu_data['user_id'] = kifu.user_id
         kifu_data['black_info'] = kifu.black_info
         kifu_data['white_info'] = kifu.white_info
-        kifu_data['create_date'] = kifu.create_date
+        kifu_data['create_date'] = kifu.create_date.strftime(
+            '%Y-%m-%d %H:%M:%S')
         output.append(kifu_data)
 
     return jsonify({'kifus': output})
