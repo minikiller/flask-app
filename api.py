@@ -304,9 +304,7 @@ def get_all_games(current_user):
 
     for game in games:
         game_data = {}
-        game_data['id'] = game.id
-        game_data['text'] = game.text
-        game_data['complete'] = game.complete
+        setGameData(game_data, game)
         output.append(game_data)
 
     return jsonify({'games': output})
@@ -321,19 +319,41 @@ def get_one_game(current_user, game_id):
         return jsonify({'message': 'No game found!'})
 
     game_data = {}
-    game_data['id'] = game.id
-    game_data['text'] = game.text
-    game_data['complete'] = game.complete
+    setGameData(game_data, game)
 
     return jsonify(game_data)
+
+
+def setGameData(game_data, game):
+    game_data['id'] = game.id
+    game_data['name'] = game.name
+    game_data['comment'] = game.comment
+    game_data['complete'] = game.complete
+    game_data['blackone_id'] = game.blackone_id
+    game_data['blacktwo_id'] = game.blacktwo_id
+    game_data['whiteone_id'] = game.whiteone_id
+    game_data['whitetwo_id'] = game.whitetwo_id
+    game_data['create_date'] = game.create_date.strftime(
+            '%Y-%m-%d %H:%M:%S')
+    game_data['dur_date'] = game.dur_date.strftime(
+            '%Y-%m-%d %H:%M:%S')
+    game_data['user_id'] = game.user_id
 
 
 @app.route('/games', methods=['POST'])
 @token_required
 def create_game(current_user):
     data = request.get_json()
-# TODO add data
-    new_game = Game(text=data['text'], complete=False, user_id=current_user.id)
+    now_time = datetime.datetime.now()
+    valdate = datetime.datetime.strptime(
+        data['dur_date'], "%Y-%m-%d %H:%M:%S").date()
+    new_game = Game(name=data['name'], comment=data['comment'],
+                    complete=False, dur_date=valdate,
+                    blackone_id=data['blackone_id'],
+                    blacktwo_id=data['blacktwo_id'],
+                    whiteone_id=data['whiteone_id'],
+                    whitetwo_id=data['whitetwo_id'],
+                    create_date=now_time, user_id=current_user.id)
     db.session.add(new_game)
     db.session.commit()
 

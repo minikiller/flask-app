@@ -42,3 +42,22 @@ Content-Type: application/json
 
 GET http://localhost:5000/kifus HTTP/1.1
 x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiI0ZjAzYTA2OS02ZjhlLTQwMjYtYTg4NC05YTAzNGRmM2I1MTUiLCJleHAiOjE1ODkzODI2ODl9.XsBfDKLXTWoC5JG_2eOdyN3Fw7AvtdsV4bIs9sJbrOc
+
+###
+POST http://localhost:5000/games HTTP/1.1
+x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiI0ZjAzYTA2OS02ZjhlLTQwMjYtYTg4NC05YTAzNGRmM2I1MTUiLCJleHAiOjE1ODk1NDcyNzB9.Ntrxb57ksYMbUOH-7hJe49pAnwJiGwkduDg9drXcuJE
+Content-Type: application/json
+
+{
+    "name": "测试对局1",
+    "comment": "ka rer",
+    "blackone_id": 1,
+    "blacktwo_id": 3,
+    "whiteone_id": 4,
+    "whitetwo_id": 5,
+    "dur_date":"2020-10-22 22:23:00"
+}
+
+###
+GET  http://localhost:5000/games HTTP/1.1
+x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiI0ZjAzYTA2OS02ZjhlLTQwMjYtYTg4NC05YTAzNGRmM2I1MTUiLCJleHAiOjE1ODk1NDcyNzB9.Ntrxb57ksYMbUOH-7hJe49pAnwJiGwkduDg9drXcuJE
