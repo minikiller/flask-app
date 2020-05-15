@@ -15,11 +15,11 @@ app = Flask(__name__)
 CORS(app)
 
 app.config['SECRET_KEY'] = 'thisissecret'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 basedir = os.path.abspath(os.path.dirname(__file__))
 print('base path is {}'.format(basedir))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + \
     os.path.join(basedir, 'todo.sqlite')
-
 db = SQLAlchemy(app)
 
 
