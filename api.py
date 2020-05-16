@@ -12,23 +12,27 @@ from flask_cors import CORS
 
 
 app = Flask(__name__)
+#  Cross Origin Resource Sharing
 CORS(app)
 
 app.config['SECRET_KEY'] = 'thisissecret'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 basedir = os.path.abspath(os.path.dirname(__file__))
-print('base path is {}'.format(basedir))
+# print('base path is {}'.format(basedir))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + \
     os.path.join(basedir, 'bbwq.sqlite')
+
 db = SQLAlchemy(app)
 
-
+# 创建用户
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     public_id = db.Column(db.String(50), unique=True)
     name = db.Column(db.String(50))
-    password = db.Column(db.String(80))
-    admin = db.Column(db.Boolean)
+    password = db.Column(db.String(20))
+    mobile = db.Column(db.String(20))
+    email = db.Column(db.String(50))
+    isadmin = db.Column(db.Boolean)
 
 
 class Todo(db.Model):
@@ -105,7 +109,7 @@ def token_required(f):
 @token_required
 def get_all_users(current_user):
 
-    if not current_user.admin:
+    if not current_user.isadmin:
         return jsonify({'message': 'Cannot perform that function!'})
 
     users = User.query.all()
@@ -117,7 +121,7 @@ def get_all_users(current_user):
         user_data['public_id'] = user.public_id
         user_data['name'] = user.name
         user_data['password'] = user.password
-        user_data['admin'] = user.admin
+        user_data['isadmin'] = user.isadmin
         output.append(user_data)
 
     return jsonify(output)
@@ -127,7 +131,7 @@ def get_all_users(current_user):
 @token_required
 def get_one_user(current_user, public_id):
 
-    if not current_user.admin:
+    if not current_user.isadmin:
         return jsonify({'message': 'Cannot perform that function!'})
 
     user = User.query.filter_by(public_id=public_id).first()
@@ -139,7 +143,7 @@ def get_one_user(current_user, public_id):
     user_data['public_id'] = user.public_id
     user_data['name'] = user.name
     user_data['password'] = user.password
-    user_data['admin'] = user.admin
+    user_data['isadmin'] = user.isadmin
 
     return jsonify({'user': user_data})
 
@@ -152,7 +156,7 @@ def create_user_register():
 @app.route('/users', methods=['POST'])
 # @token_required
 def create_user():
-    # if not current_user.admin:
+    # if not current_user.isadmin:
     #     return jsonify({'message': 'Cannot perform that function!'})
     return addUser()
 
@@ -163,7 +167,7 @@ def addUser():
     hashed_password = generate_password_hash(data['password'], method='sha256')
 
     new_user = User(public_id=str(uuid.uuid4()),
-                    name=data['name'], password=hashed_password, admin=False)
+                    name=data['name'], password=hashed_password, isadmin=False)
     db.session.add(new_user)
     db.session.commit()
 
@@ -173,7 +177,7 @@ def addUser():
 @app.route('/users/<public_id>', methods=['PUT'])
 @token_required
 def promote_user(current_user, public_id):
-    if not current_user.admin:
+    if not current_user.isadmin:
         return jsonify({'message': 'Cannot perform that function!'})
 
     user = User.query.filter_by(public_id=public_id).first()
@@ -181,7 +185,7 @@ def promote_user(current_user, public_id):
     if not user:
         return jsonify({'message': 'No user found!'})
 
-    user.admin = True
+    user.isadmin = True
     db.session.commit()
 
     return jsonify({'message': 'The user has been promoted!'})
@@ -190,7 +194,7 @@ def promote_user(current_user, public_id):
 @app.route('/users/<public_id>', methods=['DELETE'])
 @token_required
 def delete_user(current_user, public_id):
-    if not current_user.admin:
+    if not current_user.isadmin:
         return jsonify({'message': 'Cannot perform that function!'})
 
     user = User.query.filter_by(public_id=public_id).first()

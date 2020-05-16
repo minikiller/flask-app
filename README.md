@@ -1,10 +1,7 @@
 # flask-app
 
 ### create database
-
-- python, enter to console of python
-- from api import db
-- db.create_all()
+python initdb.py
 
 ### how to run
 python api.py
