@@ -26,12 +26,14 @@ db = SQLAlchemy(app)
 
 # 创建用户
 class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id  = db.Column(db.Integer, primary_key=True)
     public_id = db.Column(db.String(50), unique=True)
     name = db.Column(db.String(50))
     password = db.Column(db.String(20))
     mobile = db.Column(db.String(20))
     email = db.Column(db.String(50))
+    # 级别：-25K ～ 9D 
+    rank = db.Column(db.Integer)
     isadmin = db.Column(db.Boolean)
 
 
@@ -144,6 +146,9 @@ def get_one_user(current_user, public_id):
     user_data['name'] = user.name
     user_data['password'] = user.password
     user_data['isadmin'] = user.isadmin
+    user_data['email'] = user.email
+    user_data['mobile'] = user.mobile
+    user_data['rank'] = user.rank
 
     return jsonify({'user': user_data})
 
