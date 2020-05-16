@@ -171,8 +171,15 @@ def addUser():
 
     hashed_password = generate_password_hash(data['password'], method='sha256')
 
-    new_user = User(public_id=str(uuid.uuid4()),
-                    name=data['name'], password=hashed_password, isadmin=False)
+    new_user = User(
+        public_id=str(uuid.uuid4()),
+        name=data['name'], 
+        password=hashed_password, 
+        email=data['email'],
+        mobile=data['mobile'],
+        isadmin=False
+    )
+    
     db.session.add(new_user)
     db.session.commit()
 
