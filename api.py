@@ -47,16 +47,19 @@ Returns:
 
 class Game(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50))
-    complete = db.Column(db.Boolean)
-    user_id = db.Column(db.Integer)
-    comment = db.Column(db.String(50))
-    blackone_id = db.Column(db.Integer)
-    blacktwo_id = db.Column(db.Integer)
-    whiteone_id = db.Column(db.Integer)
-    whitetwo_id = db.Column(db.Integer)
-    create_date = db.Column(db.DateTime)
-    dur_date = db.Column(db.DateTime)
+    name = db.Column(db.String(50))  # 名称
+    complete = db.Column(db.Boolean)  # 是否结束
+    user_id = db.Column(db.Integer)  # 创建人
+    total_time = db.Column(db.Integer)  # 对局时长，单位为秒
+    comment = db.Column(db.String(50))  # 备注
+    blackone_id = db.Column(db.String(50))  # 黑选手1
+    blacktwo_id = db.Column(db.String(50))  # 黑选手2
+    whiteone_id = db.Column(db.String(50))  # 白选手1
+    whitetwo_id = db.Column(db.String(50))  # 白选手2
+    create_date = db.Column(db.DateTime)  # 创建时间
+    dur_date = db.Column(db.DateTime)  # 预定时间
+    public = db.Column(db.Boolean)  # 是否公开
+    password = db.Column(db.String(50))  # 如果不公开，设置密码
 
 
 """棋谱信息
@@ -298,7 +301,8 @@ def delete_todo(current_user, todo_id):
 @app.route('/games', methods=['GET'])
 @token_required
 def get_all_games(current_user):
-    games = Game.query.filter_by(user_id=current_user.id).all()
+    games = Game.query.filter_by().all()
+    # games = Game.query.filter_by(user_id=current_user.id).all()
 
     output = []
 
@@ -334,10 +338,13 @@ def setGameData(game_data, game):
     game_data['whiteone_id'] = game.whiteone_id
     game_data['whitetwo_id'] = game.whitetwo_id
     game_data['create_date'] = game.create_date.strftime(
-            '%Y-%m-%d %H:%M:%S')
+        '%Y-%m-%d %H:%M:%S')
     game_data['dur_date'] = game.dur_date.strftime(
-            '%Y-%m-%d %H:%M:%S')
+        '%Y-%m-%d %H:%M:%S')
     game_data['user_id'] = game.user_id
+    game_data['total_time'] = game.total_time
+    game_data['public'] = game.public
+    game_data['password'] = game.password
 
 
 @app.route('/games', methods=['POST'])
@@ -346,13 +353,16 @@ def create_game(current_user):
     data = request.get_json()
     now_time = datetime.datetime.now()
     valdate = datetime.datetime.strptime(
-        data['dur_date'], "%Y-%m-%d %H:%M:%S").date()
+        data['dur_date'], "%Y-%m-%d %H:%M:%S")
     new_game = Game(name=data['name'], comment=data['comment'],
                     complete=False, dur_date=valdate,
                     blackone_id=data['blackone_id'],
                     blacktwo_id=data['blacktwo_id'],
                     whiteone_id=data['whiteone_id'],
                     whitetwo_id=data['whitetwo_id'],
+                    total_time=data['total_time'],
+                    public=data['public'],
+                    password=data['password'],
                     create_date=now_time, user_id=current_user.id)
     db.session.add(new_game)
     db.session.commit()
