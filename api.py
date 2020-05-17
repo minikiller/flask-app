@@ -317,7 +317,8 @@ def get_all_games(current_user):
 @app.route('/games/<game_id>', methods=['GET'])
 @token_required
 def get_one_game(current_user, game_id):
-    game = Game.query.filter_by(id=game_id, user_id=current_user.id).first()
+    game = Game.query.filter_by(id=game_id).first()
+    # game = Game.query.filter_by(id=game_id, user_id=current_user.id).first()
 
     if not game:
         return jsonify({'message': 'No game found!'})
@@ -454,5 +455,5 @@ def download_one_kifu(current_user, kifu_id):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', debug=True)
     # db.create_all()
