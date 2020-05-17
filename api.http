@@ -3,12 +3,14 @@ GET http://localhost:5000/login HTTP/1.1
 Authorization: Basic admin:12345
 
 ###
-POST http://localhost:5000/user
+POST http://localhost:5000/users
 Content-Type: application/json
 
 {
-    "name": "admin",
-    "password": "12345"
+    "name": "kalix",
+    "password": "12345",
+    "email":"sunlin@qq.com",
+    "mobile":"11313"
 }
 
 

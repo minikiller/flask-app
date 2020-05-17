@@ -25,14 +25,16 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + \
 db = SQLAlchemy(app)
 
 # 创建用户
+
+
 class User(db.Model):
-    id  = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     public_id = db.Column(db.String(50), unique=True)
     name = db.Column(db.String(50))
     password = db.Column(db.String(20))
     mobile = db.Column(db.String(20))
     email = db.Column(db.String(50))
-    # 级别：-25K ～ 9D 
+    # 级别：-25K ～ 9D
     rank = db.Column(db.Integer)
     isadmin = db.Column(db.Boolean)
 
@@ -173,13 +175,13 @@ def addUser():
 
     new_user = User(
         public_id=str(uuid.uuid4()),
-        name=data['name'], 
-        password=hashed_password, 
+        name=data['name'],
+        password=hashed_password,
         email=data['email'],
         mobile=data['mobile'],
         isadmin=False
     )
-    
+
     db.session.add(new_user)
     db.session.commit()
 
@@ -236,7 +238,7 @@ def login():
         token = jwt.encode({'public_id': user.public_id, 'exp': datetime.datetime.utcnow(
         ) + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'])
 
-        return jsonify({'token': token.decode('UTF-8'), 'public_id': user.public_id, 'name': user.name})
+        return jsonify({'token': token.decode('UTF-8'), 'public_id': user.public_id, 'user_id': user.id, 'name': user.name})
 
     return make_response('Could not verify', 401, {'WWW-Authenticate': 'Basic realm="Login required!"'})
 
