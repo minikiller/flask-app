@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-from flask import Flask, request, jsonify, make_response
+from flask import Flask, request, jsonify, make_response, send_from_directory, send_file
 from flask_sqlalchemy import SQLAlchemy
 import uuid
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -13,7 +13,7 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 #  Cross Origin Resource Sharing
-CORS(app)
+CORS(app, expose_headers=["x-suggested-filename"])
 
 app.config['SECRET_KEY'] = 'thisissecret'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -455,21 +455,22 @@ def get_all_kifus(current_user):
 
 @app.route('/kifus/<kifu_id>', methods=['GET'])
 @token_required
-def download_one_kifu(current_user, kifu_id):
-    kifu = Kifu.query.filter_by(id=kifu_id, user_id=current_user.id).first()
+def download_one_kifu(kifu_id):
+    kifu = Kifu.query.filter_by(id=kifu_id).first()
 
     if not kifu:
         return jsonify({'message': 'No kifu found!'})
 
-    kifu_data = {}
-    kifu_data['id'] = kifu.id
-    kifu_data['kifu_data'] = kifu.kifu_data
-    kifu_data['user_id'] = kifu.user_id
-    kifu_data['black_info'] = kifu.black_info
-    kifu_data['white_info'] = kifu.white_info
-    kifu_data['create_date'] = kifu.create_date
-
-    return jsonify(kifu_data)
+    file_name = kifu.create_date.strftime(
+        '%Y-%m-%d')+".sgf"
+    with open(file_name, mode='w', encoding='utf-8') as outFile:
+        outFile.write(kifu.kifu_data)
+    directory = os.getcwd()
+    # result = send_file(os.path.join(directory, file_name), as_attachment=True)
+    result = send_from_directory(directory,
+                                 file_name, as_attachment=True)
+    result.headers["x-suggested-filename"] = file_name
+    return result
 
 
 if __name__ == '__main__':

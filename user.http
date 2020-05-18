@@ -1,5 +1,5 @@
 ### login
-GET http://localhost:5000/login HTTP/1.1
+GET https://localhost:5000/login HTTP/1.1
 Authorization: Basic admin:12345
 
 ###
@@ -33,8 +33,8 @@ Content-Type: application/json
 
 ### create a new kifu
 
-POST http://localhost:5000/kifus HTTP/1.1
-x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiI0ZjAzYTA2OS02ZjhlLTQwMjYtYTg4NC05YTAzNGRmM2I1MTUiLCJleHAiOjE1ODkzODI2ODl9.XsBfDKLXTWoC5JG_2eOdyN3Fw7AvtdsV4bIs9sJbrOc
+POST https://localhost:5000/kifus HTTP/1.1
+x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiJkNzZmNTgwMC04YjEwLTRiNWItODA3NS00M2EwOTcxMGZhMWEiLCJleHAiOjE1ODk3ODM5Njd9.W_4sZE6N7G30lL1WgQKZc8X_0AZIcU3Urj7XIvhAYNE
 Content-Type: application/json
 
 {
@@ -45,6 +45,6 @@ Content-Type: application/json
 
 ### create a new kifu
 
-GET http://localhost:5000/kifus HTTP/1.1
-x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiI0ZjAzYTA2OS02ZjhlLTQwMjYtYTg4NC05YTAzNGRmM2I1MTUiLCJleHAiOjE1ODkzODI2ODl9.XsBfDKLXTWoC5JG_2eOdyN3Fw7AvtdsV4bIs9sJbrOc
+GET https://localhost:5000/kifus/1 HTTP/1.1
+x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiJkNzZmNTgwMC04YjEwLTRiNWItODA3NS00M2EwOTcxMGZhMWEiLCJleHAiOjE1ODk3ODM5Njd9.W_4sZE6N7G30lL1WgQKZc8X_0AZIcU3Urj7XIvhAYNE
 
