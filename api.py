@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-from flask import Flask, request, jsonify, make_response, send_from_directory, send_file
+from flask import Flask, request, jsonify, make_response, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 import uuid
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -109,8 +109,23 @@ def token_required(f):
     return decorated
 
 
-@app.route('/users', methods=['GET'])
-@token_required
+@app.route('/users/data', methods=['GET'])
+def data():
+    # here we want to get the value of user (i.e. ?user=some-value)
+    userName = request.args.get('userName')
+    users = User.query.filter(
+        User.name.like("%{}%".format(userName))).all()
+    output = []
+    for user in users:
+        user_data = {}
+        setUserData(user_data, user)
+        output.append(user_data)
+
+    return jsonify(output)
+
+
+@ app.route('/users', methods=['GET'])
+@ token_required
 def get_all_users(current_user):
 
     if not current_user.isadmin:
@@ -122,17 +137,14 @@ def get_all_users(current_user):
 
     for user in users:
         user_data = {}
-        user_data['public_id'] = user.public_id
-        user_data['name'] = user.name
-        user_data['password'] = user.password
-        user_data['isadmin'] = user.isadmin
+        setUserData(user_data, user)
         output.append(user_data)
 
     return jsonify(output)
 
 
-@app.route('/users/<public_id>', methods=['GET'])
-@token_required
+@ app.route('/users/<public_id>', methods=['GET'])
+@ token_required
 def get_one_user(current_user, public_id):
 
     if not current_user.isadmin:
@@ -144,6 +156,15 @@ def get_one_user(current_user, public_id):
         return jsonify({'message': 'No user found!'})
 
     user_data = {}
+    setUserData(user_data, user)
+
+    return jsonify({'user': user_data})
+
+    """设置用户数据
+    """
+
+
+def setUserData(user_data, user):
     user_data['public_id'] = user.public_id
     user_data['name'] = user.name
     user_data['password'] = user.password
@@ -152,15 +173,13 @@ def get_one_user(current_user, public_id):
     user_data['mobile'] = user.mobile
     user_data['rank'] = user.rank
 
-    return jsonify({'user': user_data})
 
-
-@app.route('/users/register', methods=['POST'])
+@ app.route('/users/register', methods=['POST'])
 def create_user_register():
     return addUser()
 
 
-@app.route('/users', methods=['POST'])
+@ app.route('/users', methods=['POST'])
 # @token_required
 def create_user():
     # if not current_user.isadmin:
@@ -188,8 +207,8 @@ def addUser():
     return jsonify({'message': 'New user created!'})
 
 
-@app.route('/users/<public_id>', methods=['PUT'])
-@token_required
+@ app.route('/users/<public_id>', methods=['PUT'])
+@ token_required
 def promote_user(current_user, public_id):
     if not current_user.isadmin:
         return jsonify({'message': 'Cannot perform that function!'})
@@ -205,8 +224,8 @@ def promote_user(current_user, public_id):
     return jsonify({'message': 'The user has been promoted!'})
 
 
-@app.route('/users/<public_id>', methods=['DELETE'])
-@token_required
+@ app.route('/users/<public_id>', methods=['DELETE'])
+@ token_required
 def delete_user(current_user, public_id):
     if not current_user.isadmin:
         return jsonify({'message': 'Cannot perform that function!'})
@@ -222,7 +241,7 @@ def delete_user(current_user, public_id):
     return jsonify({'message': 'The user has been deleted!'})
 
 
-@app.route('/login')
+@ app.route('/login')
 def login():
     auth = request.authorization
 
@@ -243,8 +262,8 @@ def login():
     return make_response({'message': "用户名或密码错误。"}, 401, {'WWW-Authenticate': 'Basic realm="Login required!"'})
 
 
-@app.route('/todo', methods=['GET'])
-@token_required
+@ app.route('/todo', methods=['GET'])
+@ token_required
 def get_all_todos(current_user):
     todos = Todo.query.filter_by(user_id=current_user.id).all()
 
@@ -260,8 +279,8 @@ def get_all_todos(current_user):
     return jsonify({'todos': output})
 
 
-@app.route('/todo/<todo_id>', methods=['GET'])
-@token_required
+@ app.route('/todo/<todo_id>', methods=['GET'])
+@ token_required
 def get_one_todo(current_user, todo_id):
     todo = Todo.query.filter_by(id=todo_id, user_id=current_user.id).first()
 
@@ -276,8 +295,8 @@ def get_one_todo(current_user, todo_id):
     return jsonify(todo_data)
 
 
-@app.route('/todo', methods=['POST'])
-@token_required
+@ app.route('/todo', methods=['POST'])
+@ token_required
 def create_todo(current_user):
     data = request.get_json()
 
@@ -288,8 +307,8 @@ def create_todo(current_user):
     return jsonify({'message': "Todo created!"})
 
 
-@app.route('/todo/<todo_id>', methods=['PUT'])
-@token_required
+@ app.route('/todo/<todo_id>', methods=['PUT'])
+@ token_required
 def complete_todo(current_user, todo_id):
     todo = Todo.query.filter_by(id=todo_id, user_id=current_user.id).first()
 
@@ -302,8 +321,8 @@ def complete_todo(current_user, todo_id):
     return jsonify({'message': 'Todo item has been completed!'})
 
 
-@app.route('/todo/<todo_id>', methods=['DELETE'])
-@token_required
+@ app.route('/todo/<todo_id>', methods=['DELETE'])
+@ token_required
 def delete_todo(current_user, todo_id):
     todo = Todo.query.filter_by(id=todo_id, user_id=current_user.id).first()
 
@@ -316,8 +335,8 @@ def delete_todo(current_user, todo_id):
     return jsonify({'message': 'Todo item deleted!'})
 
 
-@app.route('/games', methods=['GET'])
-@token_required
+@ app.route('/games', methods=['GET'])
+@ token_required
 def get_all_games(current_user):
     games = Game.query.filter_by().all()
     # games = Game.query.filter_by(user_id=current_user.id).all()
@@ -332,8 +351,8 @@ def get_all_games(current_user):
     return jsonify({'games': output})
 
 
-@app.route('/games/<game_id>', methods=['GET'])
-@token_required
+@ app.route('/games/<game_id>', methods=['GET'])
+@ token_required
 def get_one_game(current_user, game_id):
     game = Game.query.filter_by(id=game_id).first()
     # game = Game.query.filter_by(id=game_id, user_id=current_user.id).first()
@@ -366,8 +385,8 @@ def setGameData(game_data, game):
     game_data['password'] = game.password
 
 
-@app.route('/games', methods=['POST'])
-@token_required
+@ app.route('/games', methods=['POST'])
+@ token_required
 def create_game(current_user):
     data = request.get_json()
     now_time = datetime.datetime.now()
@@ -389,8 +408,8 @@ def create_game(current_user):
     return jsonify({'message': "Game created!"})
 
 
-@app.route('/games/<game_id>', methods=['PUT'])
-@token_required
+@ app.route('/games/<game_id>', methods=['PUT'])
+@ token_required
 def complete_game(current_user, game_id):
     game = Game.query.filter_by(id=game_id, user_id=current_user.id).first()
 
@@ -403,8 +422,8 @@ def complete_game(current_user, game_id):
     return jsonify({'message': 'Game item has been completed!'})
 
 
-@app.route('/games/<game_id>', methods=['DELETE'])
-@token_required
+@ app.route('/games/<game_id>', methods=['DELETE'])
+@ token_required
 def delete_game(current_user, game_id):
     game = Game.query.filter_by(id=game_id, user_id=current_user.id).first()
 
@@ -417,8 +436,8 @@ def delete_game(current_user, game_id):
     return jsonify({'message': 'Game item deleted!'})
 
 
-@app.route('/kifus', methods=['POST'])
-@token_required
+@ app.route('/kifus', methods=['POST'])
+@ token_required
 def create_kifu(current_user):
     data = request.get_json()
     now_time = datetime.datetime.now()
@@ -432,8 +451,8 @@ def create_kifu(current_user):
     return jsonify({'message': "Kifu created!"})
 
 
-@app.route('/kifus', methods=['GET'])
-@token_required
+@ app.route('/kifus', methods=['GET'])
+@ token_required
 def get_all_kifus(current_user):
     kifus = Kifu.query.filter_by(user_id=current_user.id).all()
 
@@ -453,8 +472,8 @@ def get_all_kifus(current_user):
     return jsonify({'kifus': output})
 
 
-@app.route('/kifus/<kifu_id>', methods=['GET'])
-@token_required
+@ app.route('/kifus/<kifu_id>', methods=['GET'])
+@ token_required
 def download_one_kifu(kifu_id):
     kifu = Kifu.query.filter_by(id=kifu_id).first()
 

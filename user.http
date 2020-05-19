@@ -31,6 +31,9 @@ Content-Type: application/json
     "password": "123"
 }
 
+###
+GET https://localhost:5000/users/data?userName=admin
+
 ### create a new kifu
 
 POST https://localhost:5000/kifus HTTP/1.1
