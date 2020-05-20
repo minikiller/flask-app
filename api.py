@@ -34,8 +34,7 @@ class User(db.Model):
     password = db.Column(db.String(20))
     mobile = db.Column(db.String(20))
     email = db.Column(db.String(50))
-    # 级别：-25K ～ 9D
-    rank = db.Column(db.Integer)
+    rank = db.Column(db.Integer)    # 级别：-25K ～ 9D
     isadmin = db.Column(db.Boolean)
 
 
@@ -55,19 +54,19 @@ Returns:
 
 class Game(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50))  # 名称
-    complete = db.Column(db.Boolean)  # 是否结束
-    user_id = db.Column(db.Integer)  # 创建人
-    total_time = db.Column(db.Integer)  # 对局时长，单位为秒
-    comment = db.Column(db.String(50))  # 备注
+    name = db.Column(db.String(50))         # 名称
+    complete = db.Column(db.Boolean)        # 是否结束
+    user_id = db.Column(db.Integer)         # 创建人
+    total_time = db.Column(db.Integer)      # 对局时长，单位为秒
+    comment = db.Column(db.String(50))      # 备注
     blackone_id = db.Column(db.String(50))  # 黑选手1
     blacktwo_id = db.Column(db.String(50))  # 黑选手2
     whiteone_id = db.Column(db.String(50))  # 白选手1
     whitetwo_id = db.Column(db.String(50))  # 白选手2
-    create_date = db.Column(db.DateTime)  # 创建时间
-    dur_date = db.Column(db.DateTime)  # 预定时间
-    public = db.Column(db.Boolean)  # 是否公开
-    password = db.Column(db.String(50))  # 如果不公开，设置密码
+    create_date = db.Column(db.DateTime)    # 创建时间
+    dur_date = db.Column(db.DateTime)       # 预定时间
+    public = db.Column(db.Boolean)          # 是否公开
+    password = db.Column(db.String(50))     # 如果不公开，设置密码
 
 
 """棋谱信息
