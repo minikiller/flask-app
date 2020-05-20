@@ -24,18 +24,19 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + \
 
 db = SQLAlchemy(app)
 
-# 创建用户
+# 系统用户
 
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     public_id = db.Column(db.String(50), unique=True)
-    name = db.Column(db.String(50))
-    password = db.Column(db.String(20))
-    mobile = db.Column(db.String(20))
-    email = db.Column(db.String(50))
-    rank = db.Column(db.Integer)    # 级别：-25K ～ 9D
-    isadmin = db.Column(db.Boolean)
+    name = db.Column(db.String(50))         # 登陆用的用户名
+    password = db.Column(db.String(20))     # 密码
+    mobile = db.Column(db.String(20))       # 手机号码
+    email = db.Column(db.String(50))        # 电子邮件地址
+    rank = db.Column(db.Integer)            # 级别：-25K ～ 9D
+    # lefttimes = db.Column(db.Integer)       # 用户使用对局室的剩余时间
+    isadmin = db.Column(db.Boolean)         # 系统管理员
 
 
 class Todo(db.Model):
@@ -122,7 +123,7 @@ def data():
 
     return jsonify(output)
 
-
+# 获得所有用户
 @ app.route('/users', methods=['GET'])
 @ token_required
 def get_all_users(current_user):
@@ -189,21 +190,26 @@ def create_user():
 def addUser():
     data = request.get_json()
 
-    hashed_password = generate_password_hash(data['password'], method='sha256')
+    user = User.query.filter_by(name=data['name']).first()
 
-    new_user = User(
-        public_id=str(uuid.uuid4()),
-        name=data['name'],
-        password=hashed_password,
-        email=data['email'],
-        mobile=data['mobile'],
-        isadmin=False
-    )
+    if not user:
+        hashed_password = generate_password_hash(
+            data['password'], method='sha256')
 
-    db.session.add(new_user)
-    db.session.commit()
+        new_user = User(
+            public_id=str(uuid.uuid4()),
+            name=data['name'],
+            password=hashed_password,
+            email=data['email'],
+            mobile=data['mobile'],
+            isadmin=False
+        )
 
-    return jsonify({'message': 'New user created!'})
+        db.session.add(new_user)
+        db.session.commit()
+        return jsonify({'message': 'New user created!'})
+    else:
+        return jsonify({'message': 'Name already exist!'})
 
 
 @ app.route('/users/<public_id>', methods=['PUT'])
