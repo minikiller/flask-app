@@ -84,6 +84,7 @@ class Kifu(db.Model):
     kifu_data = db.Column(db.String(1500))
     black_info = db.Column(db.String(50))
     white_info = db.Column(db.String(50))
+    result = db.Column(db.String(50))
 
 
 def token_required(f):
@@ -444,7 +445,7 @@ def create_kifu(current_user):
     # .strftime('%Y-%m-%d %H:%M:%S')
     new_kifu = Kifu(kifu_data=data['kifu_data'], create_date=now_time,
                     user_id=current_user.id, black_info=data['black_info'],
-                    white_info=data['white_info'])
+                    white_info=data['white_info'], result=data["result"])
     db.session.add(new_kifu)
     db.session.commit()
 
@@ -465,6 +466,7 @@ def get_all_kifus(current_user):
         kifu_data['user_id'] = kifu.user_id
         kifu_data['black_info'] = kifu.black_info
         kifu_data['white_info'] = kifu.white_info
+        kifu_data['result'] = kifu.result
         kifu_data['create_date'] = kifu.create_date.strftime(
             '%Y-%m-%d %H:%M:%S')
         output.append(kifu_data)
