@@ -24,19 +24,19 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + \
 
 db = SQLAlchemy(app)
 
-# 创建用户
+# 系统用户
 
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     public_id = db.Column(db.String(50), unique=True)
-    name = db.Column(db.String(50))
-    password = db.Column(db.String(20))
-    mobile = db.Column(db.String(20))
-    email = db.Column(db.String(50))
-    # 级别：-25K ～ 9D
-    rank = db.Column(db.Integer)
-    isadmin = db.Column(db.Boolean)
+    name = db.Column(db.String(50))         # 登陆用的用户名
+    password = db.Column(db.String(20))     # 密码
+    mobile = db.Column(db.String(20))       # 手机号码
+    email = db.Column(db.String(50))        # 电子邮件地址
+    rank = db.Column(db.Integer)            # 级别：-25K ～ 9D
+    # lefttimes = db.Column(db.Integer)       # 用户使用对局室的剩余时间
+    isadmin = db.Column(db.Boolean)         # 系统管理员
 
 
 class Todo(db.Model):
@@ -55,19 +55,19 @@ Returns:
 
 class Game(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50))  # 名称
-    complete = db.Column(db.Boolean)  # 是否结束
-    user_id = db.Column(db.Integer)  # 创建人
-    total_time = db.Column(db.Integer)  # 对局时长，单位为秒
-    comment = db.Column(db.String(50))  # 备注
+    name = db.Column(db.String(50))         # 名称
+    complete = db.Column(db.Boolean)        # 是否结束
+    user_id = db.Column(db.Integer)         # 创建人
+    total_time = db.Column(db.Integer)      # 对局时长，单位为秒
+    comment = db.Column(db.String(50))      # 备注
     blackone_id = db.Column(db.String(50))  # 黑选手1
     blacktwo_id = db.Column(db.String(50))  # 黑选手2
     whiteone_id = db.Column(db.String(50))  # 白选手1
     whitetwo_id = db.Column(db.String(50))  # 白选手2
-    create_date = db.Column(db.DateTime)  # 创建时间
-    dur_date = db.Column(db.DateTime)  # 预定时间
-    public = db.Column(db.Boolean)  # 是否公开
-    password = db.Column(db.String(50))  # 如果不公开，设置密码
+    create_date = db.Column(db.DateTime)    # 创建时间
+    dur_date = db.Column(db.DateTime)       # 预定时间
+    public = db.Column(db.Boolean)          # 是否公开
+    password = db.Column(db.String(50))     # 如果不公开，设置密码
 
 
 """棋谱信息
@@ -124,7 +124,7 @@ def data():
 
     return jsonify(output)
 
-
+# 获得所有用户
 @ app.route('/users', methods=['GET'])
 @ token_required
 def get_all_users(current_user):
@@ -191,21 +191,26 @@ def create_user():
 def addUser():
     data = request.get_json()
 
-    hashed_password = generate_password_hash(data['password'], method='sha256')
+    user = User.query.filter_by(name=data['name']).first()
 
-    new_user = User(
-        public_id=str(uuid.uuid4()),
-        name=data['name'],
-        password=hashed_password,
-        email=data['email'],
-        mobile=data['mobile'],
-        isadmin=False
-    )
+    if not user:
+        hashed_password = generate_password_hash(
+            data['password'], method='sha256')
 
-    db.session.add(new_user)
-    db.session.commit()
+        new_user = User(
+            public_id=str(uuid.uuid4()),
+            name=data['name'],
+            password=hashed_password,
+            email=data['email'],
+            mobile=data['mobile'],
+            isadmin=False
+        )
 
-    return jsonify({'message': 'New user created!'})
+        db.session.add(new_user)
+        db.session.commit()
+        return jsonify({'message': 'New user created!'})
+    else:
+        return jsonify({'message': 'Name already exist!'})
 
 
 @ app.route('/users/<public_id>', methods=['PUT'])

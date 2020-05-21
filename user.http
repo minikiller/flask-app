@@ -1,13 +1,13 @@
-### login
+### 用户登陆
 GET https://localhost:5000/login HTTP/1.1
 Authorization: Basic admin:12345
 
-###
-POST http://localhost:5000/users
+### 注册用户
+POST https://localhost:5000/users
 Content-Type: application/json
 
 {
-    "name": "kalix",
+    "name": "kalix3",
     "password": "12345",
     "email":"sunlin@qq.com",
     "mobile":"11313"
@@ -17,12 +17,12 @@ Content-Type: application/json
  
 ### get all users
 
-GET http://localhost:5000/user HTTP/1.1
-x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiI0ZjAzYTA2OS02ZjhlLTQwMjYtYTg4NC05YTAzNGRmM2I1MTUiLCJleHAiOjE1ODkwNzQwMzB9.V-GFuEXU0_kzs0n6lFXDsqYeGOfY1OMrCK2hXgh9M6Q
+GET https://localhost:5000/users HTTP/1.1
+x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiJkNzZmNTgwMC04YjEwLTRiNWItODA3NS00M2EwOTcxMGZhMWEiLCJleHAiOjE1ODk5NTU3NDF9.U4d7U_AyY7bZENINuDd1JvfT5LpgZYUBG64xS4H0El8
 
 ### create a new user
 
-POST http://localhost:5000/users HTTP/1.1
+POST https://localhost:5000/users HTTP/1.1
 x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiI0ZjAzYTA2OS02ZjhlLTQwMjYtYTg4NC05YTAzNGRmM2I1MTUiLCJleHAiOjE1ODk2MDMyMzh9.7E4A4uy8cvR3ibhRv0TIusEs0G0unQFUbd8wQe-7Jkc"
 Content-Type: application/json
 
@@ -31,7 +31,7 @@ Content-Type: application/json
     "password": "123"
 }
 
-###
+### 查看一个用户
 GET https://localhost:5000/users/data?userName=admin
 
 ### create a new kifu

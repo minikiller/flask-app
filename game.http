@@ -1,9 +1,9 @@
 ### login
-GET http://localhost:5000/login HTTP/1.1
+GET https://localhost:5000/login HTTP/1.1
 Authorization: Basic admin:12345
 
 ###
-POST http://localhost:5000/games HTTP/1.1
+POST https://localhost:5000/games HTTP/1.1
 x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiJkNzZmNTgwMC04YjEwLTRiNWItODA3NS00M2EwOTcxMGZhMWEiLCJleHAiOjE1ODk2NzczODh9.okEVipPOMK5hbgq_HLG_hZTF4dHnqNiCuCFxgoICD8s
 Content-Type: application/json
 
@@ -21,5 +21,5 @@ Content-Type: application/json
 }
 
 ###
-GET  http://localhost:5000/games/1 HTTP/1.1
+GET  https://localhost:5000/games/1 HTTP/1.1
 x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiI0ZjAzYTA2OS02ZjhlLTQwMjYtYTg4NC05YTAzNGRmM2I1MTUiLCJleHAiOjE1ODk1NTg2Mjd9.rx9YSo7lNbuP8VUAMTFm59U9xamFR-YLX00XsQFjg-A
