@@ -346,7 +346,7 @@ def delete_todo(current_user, todo_id):
 @ app.route('/games', methods=['GET'])
 @ token_required
 def get_all_games(current_user):
-    games = Game.query.filter_by().all()
+    games = Game.query.filter(Game.status != '已结束',).all()
     # games = Game.query.filter_by(user_id=current_user.id).all()
 
     output = []
@@ -425,7 +425,7 @@ def complete_game(current_user, game_id):
     if not game:
         return jsonify({'message': 'No game found!'})
 
-    game.status = "已完成"
+    game.status = "已结束"
     db.session.commit()
 
     return jsonify({'message': 'Game item has been completed!'})
