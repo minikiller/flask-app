@@ -56,7 +56,6 @@ Returns:
 class Game(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))         # 名称
-    complete = db.Column(db.Boolean)        # 是否结束
     user_id = db.Column(db.Integer)         # 创建人
     total_time = db.Column(db.Integer)      # 对局时长，单位为秒
     comment = db.Column(db.String(50))      # 备注
@@ -67,7 +66,8 @@ class Game(db.Model):
     create_date = db.Column(db.DateTime)    # 创建时间
     dur_date = db.Column(db.DateTime)       # 预定时间
     public = db.Column(db.Boolean)          # 是否公开
-    password = db.Column(db.String(50))     # 如果不公开，设置密码
+    password = db.Column(db.String(50))  # 如果不公开，设置密码
+    status = db.Column(db.String(50))  # 对局状态：未开始，进行中，已结束
 
 
 """棋谱信息
@@ -125,6 +125,8 @@ def data():
     return jsonify(output)
 
 # 获得所有用户
+
+
 @ app.route('/users', methods=['GET'])
 @ token_required
 def get_all_users(current_user):
@@ -261,7 +263,7 @@ def login():
 
     if check_password_hash(user.password, auth.password):
         token = jwt.encode({'public_id': user.public_id, 'exp': datetime.datetime.utcnow(
-        ) + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'])
+        ) + datetime.timedelta(minutes=60*24)}, app.config['SECRET_KEY'])
 
         return jsonify({'token': token.decode('UTF-8'), 'public_id': user.public_id, 'user_id': user.id, 'name': user.name})
 
@@ -376,7 +378,6 @@ def setGameData(game_data, game):
     game_data['id'] = game.id
     game_data['name'] = game.name
     game_data['comment'] = game.comment
-    game_data['complete'] = game.complete
     game_data['blackone_id'] = game.blackone_id
     game_data['blacktwo_id'] = game.blacktwo_id
     game_data['whiteone_id'] = game.whiteone_id
@@ -389,6 +390,7 @@ def setGameData(game_data, game):
     game_data['total_time'] = game.total_time
     game_data['public'] = game.public
     game_data['password'] = game.password
+    game_data['status'] = game.status
 
 
 @ app.route('/games', methods=['POST'])
@@ -399,7 +401,7 @@ def create_game(current_user):
     valdate = datetime.datetime.strptime(
         data['dur_date'], "%Y-%m-%d %H:%M:%S")
     new_game = Game(name=data['name'], comment=data['comment'],
-                    complete=False, dur_date=valdate,
+                    dur_date=valdate,
                     blackone_id=data['blackone_id'],
                     blacktwo_id=data['blacktwo_id'],
                     whiteone_id=data['whiteone_id'],
@@ -407,6 +409,7 @@ def create_game(current_user):
                     total_time=data['total_time'],
                     public=data['public'],
                     password=data['password'],
+                    status='未开始',
                     create_date=now_time, user_id=current_user.id)
     db.session.add(new_game)
     db.session.commit()
@@ -414,7 +417,7 @@ def create_game(current_user):
     return jsonify({'message': "Game created!"})
 
 
-@ app.route('/games/<game_id>', methods=['PUT'])
+@ app.route('/games/complete/<game_id>', methods=['GET'])
 @ token_required
 def complete_game(current_user, game_id):
     game = Game.query.filter_by(id=game_id, user_id=current_user.id).first()
@@ -422,10 +425,24 @@ def complete_game(current_user, game_id):
     if not game:
         return jsonify({'message': 'No game found!'})
 
-    game.complete = True
+    game.status = "已完成"
     db.session.commit()
 
     return jsonify({'message': 'Game item has been completed!'})
+
+
+@ app.route('/games/begin/<game_id>', methods=['GET'])
+@ token_required
+def begin_game(current_user, game_id):
+    game = Game.query.filter_by(id=game_id, user_id=current_user.id).first()
+
+    if not game:
+        return jsonify({'message': 'No game found!'})
+
+    game.status = "进行中"
+    db.session.commit()
+
+    return jsonify({'message': 'Game item has been begined!'})
 
 
 @ app.route('/games/<game_id>', methods=['DELETE'])
