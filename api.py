@@ -471,7 +471,7 @@ def create_kifu(current_user):
     db.session.add(new_kifu)
     db.session.commit()
 
-    return jsonify({'message': "Kifu created!"})
+    return jsonify({'message': "棋谱保存成功!"})
 
 
 @ app.route('/kifus', methods=['GET'])
@@ -497,7 +497,7 @@ def get_all_kifus(current_user):
 
 
 @ app.route('/kifus/<kifu_id>', methods=['GET'])
-@ token_required
+# @ token_required
 def download_one_kifu(kifu_id):
     kifu = Kifu.query.filter_by(id=kifu_id).first()
 

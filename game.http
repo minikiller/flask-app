@@ -4,18 +4,18 @@ Authorization: Basic admin:12345
 
 ###
 POST https://localhost:5000/games HTTP/1.1
-x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiJkNzZmNTgwMC04YjEwLTRiNWItODA3NS00M2EwOTcxMGZhMWEiLCJleHAiOjE1OTAyODM3Mjl9.ov3uOjnlJHy--PamfxIp-4nLb1JV-LDWdfS3PvKjBiI
+x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiJkNzZmNTgwMC04YjEwLTRiNWItODA3NS00M2EwOTcxMGZhMWEiLCJleHAiOjE1OTAzNjM4NjN9.BQcF_Gs1NTvx4E8w4VfiMkpOkeeOQTAVXUrtQKXDj4E
 Content-Type: application/json
 
 {
-    "name": "测试对局4567",
+    "name": "测试对局4444",
     "comment": "ka rer",
     "blackone_id": "sunlf1",
     "blacktwo_id": "sunlf2",
     "whiteone_id": "sunlf3",
     "whitetwo_id": "admin",
     "dur_date":"2020-10-22 22:23:00",
-    "total_time": 5600,
+    "total_time": 200,
     "public": true,
     "password": null
 }
