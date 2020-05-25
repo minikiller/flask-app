@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, request, jsonify, make_response, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import desc
 import uuid
 from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
@@ -346,7 +347,7 @@ def delete_todo(current_user, todo_id):
 @ app.route('/games', methods=['GET'])
 @ token_required
 def get_all_games(current_user):
-    games = Game.query.filter(Game.status != '已结束',).all()
+    games = Game.query.order_by(desc(Game.create_date)).filter(Game.status != '已结束',).all()
     # games = Game.query.filter_by(user_id=current_user.id).all()
 
     output = []
@@ -477,7 +478,7 @@ def create_kifu(current_user):
 @ app.route('/kifus', methods=['GET'])
 @ token_required
 def get_all_kifus(current_user):
-    kifus = Kifu.query.filter_by(user_id=current_user.id).all()
+    kifus = Kifu.query.order_by(desc(Kifu.create_date)).filter_by(user_id=current_user.id).all()
 
     output = []
 

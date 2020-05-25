@@ -31,3 +31,8 @@ x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiJkNzZmNTg
 Content-Type: application/json
 
 {"black_info":"sunlf1&sunlf2","white_info":"sunlf3&admin","kifu_data":"(;TM[3400]KM[7.5]PB[sunlf1&sunlf2]PW[sunlf3&admin]SZ[19]AP[WGo.js:2]FF[4]GM[1]CA[UTF-8]BL[3400]WL[3400]B[pd]BL[3400]WL[3400])","result":"白中盘胜"}
+
+
+###
+GET  https://localhost:5000/kifus HTTP/1.1
+x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiJkNzZmNTgwMC04YjEwLTRiNWItODA3NS00M2EwOTcxMGZhMWEiLCJleHAiOjE1OTAzNjM4NjN9.BQcF_Gs1NTvx4E8w4VfiMkpOkeeOQTAVXUrtQKXDj4E
