@@ -36,15 +36,9 @@ class User(db.Model):
     mobile = db.Column(db.String(20))       # 手机号码
     email = db.Column(db.String(50))        # 电子邮件地址
     rank = db.Column(db.Integer)            # 级别：-25K ～ 9D
-    # lefttimes = db.Column(db.Integer)       # 用户使用对局室的剩余时间
+    lefttimes = db.Column(db.Integer)       # 用户使用对局室的剩余时间
     isadmin = db.Column(db.Boolean)         # 系统管理员
-
-
-class Todo(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    text = db.Column(db.String(50))
-    complete = db.Column(db.Boolean)
-    user_id = db.Column(db.Integer)
+    avator = db.Column(db.BLOB)             # 用户头像照片
 
 
 """游戏对局室
@@ -65,10 +59,10 @@ class Game(db.Model):
     whiteone_id = db.Column(db.String(50))  # 白选手1
     whitetwo_id = db.Column(db.String(50))  # 白选手2
     create_date = db.Column(db.DateTime)    # 创建时间
-    dur_date = db.Column(db.DateTime)       # 预定时间
+    start_time = db.Column(db.DateTime)     # 预定时间
     public = db.Column(db.Boolean)          # 是否公开
-    password = db.Column(db.String(50))  # 如果不公开，设置密码
-    status = db.Column(db.String(50))  # 对局状态：未开始，进行中，已结束
+    password = db.Column(db.String(50))     # 如果不公开，设置密码
+    status = db.Column(db.String(50))       # 对局状态：未开始，进行中，已结束
 
 
 """棋谱信息
@@ -271,83 +265,11 @@ def login():
     return make_response({'message': "用户名或密码错误。"}, 401, {'WWW-Authenticate': 'Basic realm="Login required!"'})
 
 
-@ app.route('/todo', methods=['GET'])
-@ token_required
-def get_all_todos(current_user):
-    todos = Todo.query.filter_by(user_id=current_user.id).all()
-
-    output = []
-
-    for todo in todos:
-        todo_data = {}
-        todo_data['id'] = todo.id
-        todo_data['text'] = todo.text
-        todo_data['complete'] = todo.complete
-        output.append(todo_data)
-
-    return jsonify({'todos': output})
-
-
-@ app.route('/todo/<todo_id>', methods=['GET'])
-@ token_required
-def get_one_todo(current_user, todo_id):
-    todo = Todo.query.filter_by(id=todo_id, user_id=current_user.id).first()
-
-    if not todo:
-        return jsonify({'message': 'No todo found!'})
-
-    todo_data = {}
-    todo_data['id'] = todo.id
-    todo_data['text'] = todo.text
-    todo_data['complete'] = todo.complete
-
-    return jsonify(todo_data)
-
-
-@ app.route('/todo', methods=['POST'])
-@ token_required
-def create_todo(current_user):
-    data = request.get_json()
-
-    new_todo = Todo(text=data['text'], complete=False, user_id=current_user.id)
-    db.session.add(new_todo)
-    db.session.commit()
-
-    return jsonify({'message': "Todo created!"})
-
-
-@ app.route('/todo/<todo_id>', methods=['PUT'])
-@ token_required
-def complete_todo(current_user, todo_id):
-    todo = Todo.query.filter_by(id=todo_id, user_id=current_user.id).first()
-
-    if not todo:
-        return jsonify({'message': 'No todo found!'})
-
-    todo.complete = True
-    db.session.commit()
-
-    return jsonify({'message': 'Todo item has been completed!'})
-
-
-@ app.route('/todo/<todo_id>', methods=['DELETE'])
-@ token_required
-def delete_todo(current_user, todo_id):
-    todo = Todo.query.filter_by(id=todo_id, user_id=current_user.id).first()
-
-    if not todo:
-        return jsonify({'message': 'No todo found!'})
-
-    db.session.delete(todo)
-    db.session.commit()
-
-    return jsonify({'message': 'Todo item deleted!'})
-
-
 @ app.route('/games', methods=['GET'])
 @ token_required
 def get_all_games(current_user):
-    games = Game.query.order_by(desc(Game.create_date)).filter(Game.status != '已结束',).all()
+    games = Game.query.order_by(desc(Game.create_date)).filter(
+        Game.status != '已结束',).all()
     # games = Game.query.filter_by(user_id=current_user.id).all()
 
     output = []
@@ -385,7 +307,7 @@ def setGameData(game_data, game):
     game_data['whitetwo_id'] = game.whitetwo_id
     game_data['create_date'] = game.create_date.strftime(
         '%Y-%m-%d %H:%M:%S')
-    game_data['dur_date'] = game.dur_date.strftime(
+    game_data['start_time'] = game.start_time.strftime(
         '%Y-%m-%d %H:%M:%S')
     game_data['user_id'] = game.user_id
     game_data['total_time'] = game.total_time
@@ -400,9 +322,9 @@ def create_game(current_user):
     data = request.get_json()
     now_time = datetime.datetime.now()
     valdate = datetime.datetime.strptime(
-        data['dur_date'], "%Y-%m-%d %H:%M:%S")
+        data['start_time'], "%Y-%m-%d %H:%M:%S")
     new_game = Game(name=data['name'], comment=data['comment'],
-                    dur_date=valdate,
+                    start_time=valdate,
                     blackone_id=data['blackone_id'],
                     blacktwo_id=data['blacktwo_id'],
                     whiteone_id=data['whiteone_id'],
@@ -478,7 +400,8 @@ def create_kifu(current_user):
 @ app.route('/kifus', methods=['GET'])
 @ token_required
 def get_all_kifus(current_user):
-    kifus = Kifu.query.order_by(desc(Kifu.create_date)).filter_by(user_id=current_user.id).all()
+    kifus = Kifu.query.order_by(desc(Kifu.create_date)).filter_by(
+        user_id=current_user.id).all()
 
     output = []
 
