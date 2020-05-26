@@ -6,7 +6,7 @@ import uuid
 db.drop_all()
 db.create_all()
 
-hashed_password = generate_password_hash('123456', method='sha256')
+hashed_password = generate_password_hash('1', method='sha256')
 
 user1 = api.User(
     public_id=str(uuid.uuid4()),
