@@ -97,6 +97,8 @@ def token_required(f):
             data = jwt.decode(token, app.config['SECRET_KEY'])
             current_user = User.query.filter_by(
                 public_id=data['public_id']).first()
+            if current_user == None:
+                return jsonify({'message': 'Token is invalid!'}), 401
         except:
             return jsonify({'message': 'Token is invalid!'}), 401
 
@@ -343,7 +345,7 @@ def create_game(current_user):
 @ app.route('/games/complete/<game_id>', methods=['GET'])
 @ token_required
 def complete_game(current_user, game_id):
-    game = Game.query.filter_by(id=game_id, user_id=current_user.id).first()
+    game = Game.query.filter_by(id=game_id).first()
 
     if not game:
         return jsonify({'message': 'No game found!'})
@@ -357,7 +359,7 @@ def complete_game(current_user, game_id):
 @ app.route('/games/begin/<game_id>', methods=['GET'])
 @ token_required
 def begin_game(current_user, game_id):
-    game = Game.query.filter_by(id=game_id, user_id=current_user.id).first()
+    game = Game.query.filter_by(id=game_id).first()
 
     if not game:
         return jsonify({'message': 'No game found!'})

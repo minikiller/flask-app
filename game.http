@@ -1,21 +1,21 @@
 ### login
 GET https://localhost:5000/login HTTP/1.1
-Authorization: Basic admin:12345
+Authorization: Basic sunlf1:1
 
 ###
 POST https://localhost:5000/games HTTP/1.1
-x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiJkNzZmNTgwMC04YjEwLTRiNWItODA3NS00M2EwOTcxMGZhMWEiLCJleHAiOjE1OTAzNjM4NjN9.BQcF_Gs1NTvx4E8w4VfiMkpOkeeOQTAVXUrtQKXDj4E
+x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiJkNzZmNTgwMC04YjEwLTRiNWItODA3NS00M2EwOTcxMGZhMWEiLCJleHAiOjE1OTA0OTA5MDJ9.ZBynNOxL97Gn6RZx5Wxj4SFGva7wgMA_w7bsJurY8aE
 Content-Type: application/json
 
 {
-    "name": "测试对局4444",
+    "name": "测试对局1111",
     "comment": "ka rer",
     "blackone_id": "sunlf1",
     "blacktwo_id": "sunlf2",
     "whiteone_id": "sunlf3",
     "whitetwo_id": "admin",
     "dur_date":"2020-10-22 22:23:00",
-    "total_time": 200,
+    "total_time": 6000,
     "public": true,
     "password": null
 }
@@ -34,5 +34,8 @@ Content-Type: application/json
 
 
 ###
-GET  https://localhost:5000/kifus HTTP/1.1
-x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiJkNzZmNTgwMC04YjEwLTRiNWItODA3NS00M2EwOTcxMGZhMWEiLCJleHAiOjE1OTAzNjM4NjN9.BQcF_Gs1NTvx4E8w4VfiMkpOkeeOQTAVXUrtQKXDj4E
+POST  https://localhost:5000/kifus HTTP/1.1
+x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiI1ODZmNzBjZi1mM2FmLTRiNmMtODkwOS1mYzFiNjc3N2NhNzYiLCJleHAiOjE1OTA1ODU1ODl9.cCvdXVwt6dtVhrfpt2ZEqg_Fxodsf-QiSWDuJM6JjY0
+Content-Type: application/json
+
+{"black_info":"sunlf1&sunlf2","white_info":"sunhy1&sunhy2","kifu_data":"(\n;TM[60]KM[7.5]PB[sunlf1&sunlf2]PW[sunhy1&sunhy2]SZ[19]AP[WGo.js:2]FF[4]GM[1]CA[UTF-8]BL[60]WL[60]\n;B[qe]BL[60]WL[47]\n;W[pc]BL[60]WL[47])","result":"白超时胜"}
