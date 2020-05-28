@@ -197,7 +197,7 @@ def login():
     return make_response({'message': "用户名或密码错误。"}, 401, {'WWW-Authenticate': 'Basic realm="Login required!"'})
 
 
-@app.after_request
+""" @app.after_request
 def after_request(response):
     response.headers.add('Access-Control-Allow-Origin',
                          'https://localhost:8080')
@@ -206,4 +206,4 @@ def after_request(response):
     response.headers.add('Access-Control-Allow-Methods',
                          'GET,PUT,POST,DELETE,OPTIONS')
     response.headers.add('Access-Control-Allow-Credentials', 'true')
-    return response
+    return response """
