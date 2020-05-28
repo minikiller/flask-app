@@ -31,7 +31,7 @@ x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiIxNGM0OGR
 
 ####
 
-POST  https://localhost:5000/kifus HTTP/1.1
+POST  https://localhost:5000/kifus/ HTTP/1.1
 x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiIxNGM0OGRjNC0zMGYwLTQwNmEtOGRlNS03ZDRiOGU2ZDQ3MzAiLCJleHAiOjE1OTA3NDAwNjJ9.IFm5ENbAPIXobzJhYk5ZWg3GjK8YePOyLdxwibmsPSc
 Content-Type: application/json
 
@@ -39,7 +39,7 @@ Content-Type: application/json
 
 
 ###
-POST  https://localhost:5000/kifus HTTP/1.1
+POST  https://localhost:5000/kifus/ HTTP/1.1
 x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiI1ODZmNzBjZi1mM2FmLTRiNmMtODkwOS1mYzFiNjc3N2NhNzYiLCJleHAiOjE1OTA1ODU1ODl9.cCvdXVwt6dtVhrfpt2ZEqg_Fxodsf-QiSWDuJM6JjY0
 Content-Type: application/json
 

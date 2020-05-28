@@ -122,3 +122,6 @@ def delete_game(current_user, game_id):
     db.session.commit()
 
     return jsonify({'message': 'Game item deleted!'})
+
+
+
