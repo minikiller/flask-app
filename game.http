@@ -3,8 +3,8 @@ GET https://localhost:5000/login HTTP/1.1
 Authorization: Basic sunlf1:1
 
 ###
-POST https://localhost:5000/games HTTP/1.1
-x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiJkNzZmNTgwMC04YjEwLTRiNWItODA3NS00M2EwOTcxMGZhMWEiLCJleHAiOjE1OTA0OTA5MDJ9.ZBynNOxL97Gn6RZx5Wxj4SFGva7wgMA_w7bsJurY8aE
+POST https://localhost:5000/games/ HTTP/1.1
+x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiIxNGM0OGRjNC0zMGYwLTQwNmEtOGRlNS03ZDRiOGU2ZDQ3MzAiLCJleHAiOjE1OTA3NDAwNjJ9.IFm5ENbAPIXobzJhYk5ZWg3GjK8YePOyLdxwibmsPSc
 Content-Type: application/json
 
 {
@@ -22,12 +22,17 @@ Content-Type: application/json
 
 ###
 GET  https://localhost:5000/games HTTP/1.1
-x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiJkNzZmNTgwMC04YjEwLTRiNWItODA3NS00M2EwOTcxMGZhMWEiLCJleHAiOjE1OTAzMDMxMDR9.qYRNRKQzZtFeZeNLAy19kiH6PgqjlC5QTkRRfaKuOVc
+x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiIxNGM0OGRjNC0zMGYwLTQwNmEtOGRlNS03ZDRiOGU2ZDQ3MzAiLCJleHAiOjE1OTA3NDAwNjJ9.IFm5ENbAPIXobzJhYk5ZWg3GjK8YePOyLdxwibmsPSc
+
+
+###
+GET  https://localhost:5000/kifus HTTP/1.1
+x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiIxNGM0OGRjNC0zMGYwLTQwNmEtOGRlNS03ZDRiOGU2ZDQ3MzAiLCJleHAiOjE1OTA3NDAwNjJ9.IFm5ENbAPIXobzJhYk5ZWg3GjK8YePOyLdxwibmsPSc
 
 ####
 
 POST  https://localhost:5000/kifus HTTP/1.1
-x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiJkNzZmNTgwMC04YjEwLTRiNWItODA3NS00M2EwOTcxMGZhMWEiLCJleHAiOjE1OTAxNTU3MjF9.MQdiSC_EGk2frgJObK31IJgL4GM09vokQAw3eV0IBtg
+x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiIxNGM0OGRjNC0zMGYwLTQwNmEtOGRlNS03ZDRiOGU2ZDQ3MzAiLCJleHAiOjE1OTA3NDAwNjJ9.IFm5ENbAPIXobzJhYk5ZWg3GjK8YePOyLdxwibmsPSc
 Content-Type: application/json
 
 {"black_info":"sunlf1&sunlf2","white_info":"sunlf3&admin","kifu_data":"(;TM[3400]KM[7.5]PB[sunlf1&sunlf2]PW[sunlf3&admin]SZ[19]AP[WGo.js:2]FF[4]GM[1]CA[UTF-8]BL[3400]WL[3400]B[pd]BL[3400]WL[3400])","result":"白中盘胜"}

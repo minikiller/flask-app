@@ -1,6 +1,6 @@
 ### 用户登陆
 GET https://localhost:5000/login HTTP/1.1
-Authorization: Basic admin:12345
+Authorization: Basic admin:1
 
 ### 注册用户
 POST https://localhost:5000/users
