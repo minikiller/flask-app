@@ -117,11 +117,11 @@ def delete_game(current_user, game_id):
 
     if not game:
         return jsonify({'message': 'No game found!'})
-
-    db.session.delete(game)
-    db.session.commit()
-
-    return jsonify({'message': 'Game item deleted!'})
-
-
-
+    name = game.name
+    # 未开始，进行中，已结束
+    if game.status == '未开始':
+        db.session.delete(game)
+        db.session.commit()
+        return jsonify({'message': name+'对局删除成功!'})
+    else:
+        return jsonify({'message': name+'对局正在进行或者已经结束，无法删除!'})

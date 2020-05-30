@@ -11,6 +11,7 @@ Content-Type: application/json
     "name": "测试对局1111",
     "comment": "ka rer",
     "blackone_id": "sunlf1",
+    "user_id": 1,
     "blacktwo_id": "sunlf2",
     "whiteone_id": "sunlf3",
     "whitetwo_id": "admin",
