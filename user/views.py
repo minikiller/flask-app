@@ -127,14 +127,15 @@ def addUser():
     if not user:
         hashed_password = generate_password_hash(
             data['password'], method='sha256')
-
+        avatar = "http://sunlingfeng.0431zy.com/1.png"
         new_user = User(
             public_id=str(uuid.uuid4()),
             name=data['name'],
             password=hashed_password,
             email=data['email'],
             mobile=data['mobile'],
-            isadmin=False
+            isadmin=False,
+            avatar=avatar
         )
 
         db.session.add(new_user)
