@@ -103,7 +103,7 @@ def setUserData(user_data, user):
     user_data['email'] = user.email
     user_data['mobile'] = user.mobile
     user_data['rank'] = user.rank
-    user_data['avator'] = user.avator
+    user_data['avatar'] = user.avatar
 
 
 @ user_api.route('/register', methods=['POST'])
@@ -191,7 +191,7 @@ def change_avatar(current_user, public_id):
 
     avatar_url = alioss.uploadBase64(avatar_base_64_str)
     print(avatar_url)
-    user.avator = avatar_url
+    user.avatar = avatar_url
     db.session.commit()
     return jsonify({'message': 'The user has been promoted!'})
 
@@ -212,7 +212,7 @@ def login():
         token = jwt.encode({'public_id': user.public_id, 'exp': datetime.datetime.utcnow(
         ) + datetime.timedelta(minutes=60*24)}, app.config['SECRET_KEY'])
 
-        return jsonify({'token': token.decode('UTF-8'), 'public_id': user.public_id, 'user_id': user.id, 'name': user.name, 'avator': user.avator})
+        return jsonify({'token': token.decode('UTF-8'), 'public_id': user.public_id, 'user_id': user.id, 'name': user.name, 'avatar': user.avatar})
 
     return make_response({'message': "用户名或密码错误。"}, 401, {'WWW-Authenticate': 'Basic realm="Login required!"'})
 

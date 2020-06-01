@@ -30,7 +30,7 @@ class User(db.Model):
     rank = db.Column(db.Integer)            # 级别：-25K ～ 9D
     lefttimes = db.Column(db.Integer)       # 用户使用对局室的剩余时间
     isadmin = db.Column(db.Boolean)         # 系统管理员
-    avator = db.Column(db.String(200))             # 用户头像照片
+    avatar = db.Column(db.String(200))             # 用户头像照片
 
 
 """游戏对局室
