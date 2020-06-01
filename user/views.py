@@ -8,6 +8,7 @@ import jwt
 import datetime
 from functools import wraps
 
+import alioss
 from user import user_api
 from model import User, db, app
 
@@ -102,6 +103,7 @@ def setUserData(user_data, user):
     user_data['email'] = user.email
     user_data['mobile'] = user.mobile
     user_data['rank'] = user.rank
+    user_data['avator'] = user.avator
 
 
 @ user_api.route('/register', methods=['POST'])
@@ -176,7 +178,25 @@ def delete_user(current_user, public_id):
     return jsonify({'message': 'The user has been deleted!'})
 
 
-@ app.route('/login')
+@user_api.route('/change_avatar/<public_id>', methods=['PUT'])
+@token_required
+def change_avatar(current_user, public_id):
+    user = User.query.filter_by(public_id=public_id).first()
+    if not user:
+        return jsonify({'message': 'No user found!'})
+
+    data = request.get_json()
+
+    avatar_base_64_str = data['avatar_base_64_str']
+
+    avatar_url = alioss.uploadBase64(avatar_base_64_str)
+    print(avatar_url)
+    user.avator = avatar_url
+    db.session.commit()
+    return jsonify({'message': 'The user has been promoted!'})
+
+
+@app.route('/login')
 def login():
     auth = request.authorization
 
@@ -192,7 +212,7 @@ def login():
         token = jwt.encode({'public_id': user.public_id, 'exp': datetime.datetime.utcnow(
         ) + datetime.timedelta(minutes=60*24)}, app.config['SECRET_KEY'])
 
-        return jsonify({'token': token.decode('UTF-8'), 'public_id': user.public_id, 'user_id': user.id, 'name': user.name})
+        return jsonify({'token': token.decode('UTF-8'), 'public_id': user.public_id, 'user_id': user.id, 'name': user.name, 'avator': user.avator})
 
     return make_response({'message': "用户名或密码错误。"}, 401, {'WWW-Authenticate': 'Basic realm="Login required!"'})
 
