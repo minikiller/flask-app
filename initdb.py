@@ -83,7 +83,7 @@ start_date = datetime.datetime.strptime(
     "2020-10-22 22:23:00", "%Y-%m-%d %H:%M:%S")
 now_time = datetime.datetime.now()
 game1 = model.Game(
-    name="测试对局一",
+    name="对局一",
     comment="ka rer",
     blackone_id="sunlf1",
     blacktwo_id="sunlf2",
@@ -99,12 +99,12 @@ game1 = model.Game(
 )
 
 game2 = model.Game(
-    name="测试对局二",
+    name="对局二",
     comment="ka rer",
-    blackone_id="sunlf1",
-    blacktwo_id="sunlf2",
-    whiteone_id="sunhy1",
-    whitetwo_id="sunhy2",
+    blackone_id="sunhy1",
+    blacktwo_id="sunlf1",
+    whiteone_id="sanda",
+    whitetwo_id="laomian",
     start_time=start_date,
     create_date=now_time,
     total_time=60,
