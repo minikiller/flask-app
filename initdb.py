@@ -79,6 +79,15 @@ user8 = model.User(
     isadmin=False
 )
 
+user9 = model.User(
+    public_id="b2bf42c2-42bb-46d9-be48-cf9cf1b7c359",
+    name='cheng',
+    password=testuser_password,
+    email='95006410@qq.com',
+    mobile='13601072289',
+    isadmin=False
+)
+
 start_date = datetime.datetime.strptime(
     "2020-10-22 22:23:00", "%Y-%m-%d %H:%M:%S")
 now_time = datetime.datetime.now()
@@ -103,7 +112,7 @@ game2 = model.Game(
     comment="ka rer",
     blackone_id="sunhy1",
     blacktwo_id="sunlf1",
-    whiteone_id="sanda",
+    whiteone_id="cheng",
     whitetwo_id="laomian",
     start_time=start_date,
     create_date=now_time,
@@ -122,6 +131,7 @@ db.session.add(user5)
 db.session.add(user6)
 db.session.add(user7)
 db.session.add(user8)
+db.session.add(user9)
 db.session.add(game1)
 db.session.add(game2)
 
