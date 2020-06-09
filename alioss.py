@@ -3,8 +3,8 @@ import uuid
 import oss2
 import os
 
-myAccessKeyId = 'LTAI4GK13jH25e6fTAudS4Hj'
-myAccessKeySecret = 'cbxYaYCx9icIo23AUSayeNBrV72uFg'
+myAccessKeyId = os.environ.get("myAccessKeyId")
+myAccessKeySecret = os.environ.get("myAccessKeySecret")
 EndPoint = 'oss-cn-qingdao.aliyuncs.com'
 myBucketName = 'sunlingfeng'
 myBucketUrl = 'http://sunlingfeng.0431zy.com/'
