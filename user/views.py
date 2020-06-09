@@ -38,19 +38,32 @@ def token_required(f):
     return decorated
 
 
+# 用于vue-select选择框进行棋手的选择查询
 @user_api.route('/data', methods=['GET'])
 def data():
     # here we want to get the value of user (i.e. ?user=some-value)
-    userName = request.args.get('userName')
-    users = User.query.filter(
-        User.name.like("%{}%".format(userName))).all()
     output = []
+    userName = request.args.get('userName')
+    if userName == "":
+        return jsonify(output)
+    else:
+        users = User.query.filter(
+            User.name.like("%{}%".format(userName))).all()
+
     for user in users:
         user_data = {}
-        setUserData(user_data, user)
+        setSelectUserData(user_data, user)
         output.append(user_data)
 
     return jsonify(output)
+
+
+# 返回查询的用户数据
+def setSelectUserData(user_data, user):
+    user_data['id'] = user.id
+    user_data['name'] = user.name
+    user_data['rank'] = user.rank
+    user_data['avatar'] = user.avatar
 
 # 获得所有用户
 

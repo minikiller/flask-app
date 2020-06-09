@@ -6,6 +6,7 @@ from model import db
 import model
 import datetime
 
+avatar = "http://sunlingfeng.0431zy.com/1.png"
 
 db.drop_all()
 db.create_all()
@@ -18,7 +19,8 @@ user1 = model.User(
     password=hashed_password,
     email='95006410@qq.com',
     mobile='13601072289',
-    isadmin=True
+    isadmin=True,
+    avatar=avatar
 )
 user2 = model.User(
     public_id="234a1099-de35-48ea-9e64-0474c6b4dcfc",
@@ -26,7 +28,8 @@ user2 = model.User(
     password=hashed_password,
     email='95006410@qq.com',
     mobile='13601072289',
-    isadmin=False
+    isadmin=False,
+    avatar=avatar
 )
 user3 = model.User(
     public_id="bd0e1ff3-36b6-49ea-a594-439768849f5b",
@@ -34,7 +37,8 @@ user3 = model.User(
     password=hashed_password,
     email='95006410@qq.com',
     mobile='13601072289',
-    isadmin=False
+    isadmin=False,
+    avatar=avatar
 )
 user4 = model.User(
     public_id="14c48dc4-30f0-406a-8de5-7d4b8e6d4730",
@@ -42,7 +46,8 @@ user4 = model.User(
     password=hashed_password,
     email='95006410@qq.com',
     mobile='13601072289',
-    isadmin=False
+    isadmin=False,
+    avatar=avatar
 )
 user5 = model.User(
     public_id="6fd9722b-d3e5-465d-b11a-14d2c4ada4a6",
@@ -50,7 +55,8 @@ user5 = model.User(
     password=hashed_password,
     email='95006410@qq.com',
     mobile='13601072289',
-    isadmin=False
+    isadmin=False,
+    avatar=avatar
 )
 
 user6 = model.User(
@@ -59,7 +65,8 @@ user6 = model.User(
     password=testuser_password,
     email='95006410@qq.com',
     mobile='13601072289',
-    isadmin=False
+    isadmin=False,
+    avatar=avatar
 )
 
 user7 = model.User(
@@ -68,7 +75,8 @@ user7 = model.User(
     password=testuser_password,
     email='95006410@qq.com',
     mobile='13601072289',
-    isadmin=False
+    isadmin=False,
+    avatar=avatar
 )
 user8 = model.User(
     public_id="b2bf42c2-42bb-46d9-be48-cf9cf1b7c358",
@@ -76,7 +84,8 @@ user8 = model.User(
     password=testuser_password,
     email='95006410@qq.com',
     mobile='13601072289',
-    isadmin=False
+    isadmin=False,
+    avatar=avatar
 )
 
 user9 = model.User(
@@ -85,7 +94,8 @@ user9 = model.User(
     password=testuser_password,
     email='95006410@qq.com',
     mobile='13601072289',
-    isadmin=False
+    isadmin=False,
+    avatar=avatar
 )
 
 start_date = datetime.datetime.strptime(

@@ -63,14 +63,18 @@ def setGameData(game_data, game):
 def create_game(current_user):
     data = request.get_json()
     now_time = datetime.datetime.now()
-    valdate = datetime.datetime.strptime(
-        data['start_time'], "%Y-%m-%d %H:%M:%S")
+    # start_time = datetime.datetime.strptime(
+    #     data['start_time'], "%Y-%m-%d %H:%M:%S")
+    blackone_id = data['opponent'][0]['name']
+    blacktwo_id = data['opponent'][1]['name']
+    whiteone_id = data['opponent'][2]['name']
+    whitetwo_id = data['opponent'][3]['name']
     new_game = Game(name=data['name'], comment=data['comment'],
-                    start_time=valdate,
-                    blackone_id=data['blackone_id'],
-                    blacktwo_id=data['blacktwo_id'],
-                    whiteone_id=data['whiteone_id'],
-                    whitetwo_id=data['whitetwo_id'],
+                    start_time=now_time,
+                    blackone_id=blackone_id,
+                    blacktwo_id=blacktwo_id,
+                    whiteone_id=whiteone_id,
+                    whitetwo_id=whitetwo_id,
                     total_time=data['total_time'],
                     public=data['public'],
                     password=data['password'],
@@ -79,7 +83,7 @@ def create_game(current_user):
     db.session.add(new_game)
     db.session.commit()
 
-    return jsonify({'message': "Game created!"})
+    return jsonify({'message': "对局创建成功！"})
 
 
 @ game_api.route('/complete/<game_id>', methods=['GET'])
