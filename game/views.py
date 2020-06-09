@@ -75,7 +75,7 @@ def create_game(current_user):
                     blacktwo_id=blacktwo_id,
                     whiteone_id=whiteone_id,
                     whitetwo_id=whitetwo_id,
-                    total_time=data['total_time'],
+                    total_time=int(data['total_time'])*60,
                     public=data['public'],
                     password=data['password'],
                     status='未开始',
