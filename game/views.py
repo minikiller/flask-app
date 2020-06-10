@@ -66,8 +66,8 @@ def create_game(current_user):
     # start_time = datetime.datetime.strptime(
     #     data['start_time'], "%Y-%m-%d %H:%M:%S")
     blackone_id = data['opponent'][0]['name']
-    blacktwo_id = data['opponent'][1]['name']
-    whiteone_id = data['opponent'][2]['name']
+    whiteone_id = data['opponent'][1]['name']
+    blacktwo_id = data['opponent'][2]['name']
     whitetwo_id = data['opponent'][3]['name']
     new_game = Game(name=data['name'], comment=data['comment'],
                     start_time=now_time,
