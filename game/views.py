@@ -5,6 +5,7 @@ from game import game_api
 from sqlalchemy import desc
 from user.views import token_required
 import datetime
+from model import User
 
 
 @ game_api.route('/', methods=['GET'])
@@ -34,9 +35,41 @@ def get_one_game(current_user, game_id):
         return jsonify({'message': 'No game found!'})
 
     game_data = {}
-    setGameData(game_data, game)
+    setGameDetailData(game_data, game)
 
     return jsonify(game_data)
+
+
+"""获得对局用户的详细信息
+"""
+
+
+def queryUser(userName):
+    _user = User.query.filter_by(name=userName).first()
+    user = {}
+    user['name'] = _user.name
+    user['rank'] = _user.rank
+    user['avatar'] = _user.avatar
+    return user
+
+
+def setGameDetailData(game_data, game):
+    game_data['id'] = game.id
+    game_data['name'] = game.name
+    game_data['comment'] = game.comment
+    game_data['blackone_id'] = queryUser(game.blackone_id)
+    game_data['blacktwo_id'] = queryUser(game.blacktwo_id)
+    game_data['whiteone_id'] = queryUser(game.whiteone_id)
+    game_data['whitetwo_id'] = queryUser(game.whitetwo_id)
+    game_data['create_date'] = game.create_date.strftime(
+        '%Y-%m-%d %H:%M:%S')
+    game_data['start_time'] = game.start_time.strftime(
+        '%Y-%m-%d %H:%M:%S')
+    game_data['user_id'] = game.user_id
+    game_data['total_time'] = game.total_time
+    game_data['public'] = game.public
+    game_data['password'] = game.password
+    game_data['status'] = game.status
 
 
 def setGameData(game_data, game):

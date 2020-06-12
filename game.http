@@ -22,8 +22,8 @@ Content-Type: application/json
 }
 
 ###
-GET  https://localhost:5000/games HTTP/1.1
-x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiIxNGM0OGRjNC0zMGYwLTQwNmEtOGRlNS03ZDRiOGU2ZDQ3MzAiLCJleHAiOjE1OTA3NDAwNjJ9.IFm5ENbAPIXobzJhYk5ZWg3GjK8YePOyLdxwibmsPSc
+GET  https://localhost:5000/games/1 HTTP/1.1
+x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiIxNGM0OGRjNC0zMGYwLTQwNmEtOGRlNS03ZDRiOGU2ZDQ3MzAiLCJleHAiOjE1OTIwNDE5Mjl9.pOSzhi_ok8RcyxEa0gsnnHJnXAh8NQ_ovDqLwRMvqpQ
 
 
 ###
