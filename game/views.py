@@ -6,6 +6,13 @@ from sqlalchemy import desc
 from user.views import token_required
 import datetime
 from model import User
+rank = {1: "业余1段",
+        2: "业余2段",
+        3: "业余3段",
+        4: "业余4段",
+        5: "业余5段",
+        6: "业余6段",
+        7: "业余7段"}
 
 
 @ game_api.route('/', methods=['GET'])
@@ -47,8 +54,12 @@ def get_one_game(current_user, game_id):
 def queryUser(userName):
     _user = User.query.filter_by(name=userName).first()
     user = {}
+    if _user.rank is None:
+        user['rank'] = "级别不详"
+    else:
+        user['rank'] = rank[_user.rank]
     user['name'] = _user.name
-    user['rank'] = _user.rank
+
     user['avatar'] = _user.avatar
     return user
 
