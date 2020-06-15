@@ -2,6 +2,7 @@
 import sys
 import json
 import uuid
+import random
 
 IS_PY3 = sys.version_info.major == 3
 if IS_PY3:
@@ -26,6 +27,7 @@ TEXT = "老面，别BB，快落子"
 # 发音人选择, 基础音库：0为度小美，1为度小宇，3为度逍遥，4为度丫丫，
 # 精品音库：5为度小娇，103为度米朵，106为度博文，110为度小童，111为度小萌，默认为度小美
 PER = 5
+
 # 语速，取值0-15，默认为5中语速
 SPD = 5
 # 音调，取值0-15，默认为5中语调
@@ -92,7 +94,8 @@ def getVoice(_TEXT):
     token = fetch_token()
     tex = quote_plus(_TEXT)  # 此处TEXT需要两次urlencode
     print(tex)
-    params = {'tok': token, 'tex': tex, 'per': PER, 'spd': SPD, 'pit': PIT, 'vol': VOL, 'aue': AUE, 'cuid': CUID,
+    _PER = random.choice([0, 1, 3, 4, 5, 103, 106, 110, 111])
+    params = {'tok': token, 'tex': tex, 'per': _PER, 'spd': SPD, 'pit': PIT, 'vol': VOL, 'aue': AUE, 'cuid': CUID,
               'lan': 'zh', 'ctp': 1}  # lan ctp 固定参数
 
     data = urlencode(params)
