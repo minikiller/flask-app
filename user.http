@@ -12,7 +12,16 @@ Content-Type: application/json
     "email":"sunlin@qq.com",
     "mobile":"11313"
 }
+### 注册用户
+POST https://localhost:5000/users
+Content-Type: application/json
 
+{
+    "name": "kalix3",
+    "password": "12345",
+    "email":"sunlin@qq.com",
+    "mobile":"11313"
+}
 
  
 ### get all users

@@ -12,10 +12,12 @@ from model import app
 from game import game_api
 from user import user_api
 from kifu import kifu_api
+from util import util_api
 
 app.register_blueprint(user_api, url_prefix='/users')
 app.register_blueprint(game_api, url_prefix='/games')
 app.register_blueprint(kifu_api, url_prefix='/kifus')
+app.register_blueprint(util_api, url_prefix='/util')
 
 
 if __name__ == '__main__':
