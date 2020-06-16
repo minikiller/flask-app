@@ -10,6 +10,7 @@ avatar = "http://sunlingfeng.0431zy.com/1.png"
 
 db.drop_all()
 db.create_all()
+now_time = datetime.datetime.now()
 
 hashed_password = generate_password_hash('1', method='sha256')
 testuser_password = generate_password_hash('bibi', method='sha256')
@@ -20,6 +21,7 @@ user1 = model.User(
     email='95006410@qq.com',
     mobile='13601072289',
     isadmin=True,
+    create_date=now_time,
     avatar=avatar
 )
 user2 = model.User(
@@ -29,6 +31,7 @@ user2 = model.User(
     email='95006410@qq.com',
     mobile='13601072289',
     isadmin=False,
+    create_date=now_time,
     avatar=avatar
 )
 user3 = model.User(
@@ -38,6 +41,7 @@ user3 = model.User(
     email='95006410@qq.com',
     mobile='13601072289',
     isadmin=False,
+    create_date=now_time,
     avatar=avatar
 )
 user4 = model.User(
@@ -47,6 +51,7 @@ user4 = model.User(
     email='95006410@qq.com',
     mobile='13601072289',
     isadmin=False,
+    create_date=now_time,
     avatar=avatar
 )
 user5 = model.User(
@@ -56,6 +61,7 @@ user5 = model.User(
     email='95006410@qq.com',
     mobile='13601072289',
     isadmin=False,
+    create_date=now_time,
     avatar=avatar
 )
 
@@ -66,6 +72,7 @@ user6 = model.User(
     email='95006410@qq.com',
     mobile='13601072289',
     isadmin=False,
+    create_date=now_time,
     avatar=avatar
 )
 
@@ -76,6 +83,7 @@ user7 = model.User(
     email='95006410@qq.com',
     mobile='13601072289',
     isadmin=False,
+    create_date=now_time,
     avatar=avatar
 )
 user8 = model.User(
@@ -85,6 +93,7 @@ user8 = model.User(
     email='95006410@qq.com',
     mobile='13601072289',
     isadmin=False,
+    create_date=now_time,
     avatar=avatar
 )
 
@@ -95,12 +104,13 @@ user9 = model.User(
     email='95006410@qq.com',
     mobile='13601072289',
     isadmin=False,
+    create_date=now_time,
     avatar=avatar
 )
 
 start_date = datetime.datetime.strptime(
     "2020-10-22 22:23:00", "%Y-%m-%d %H:%M:%S")
-now_time = datetime.datetime.now()
+
 game1 = model.Game(
     name="对局一",
     comment="ka rer",

@@ -110,6 +110,7 @@ def get_one_user(current_user, public_id):
 
 def setUserData(user_data, user):
     user_data['public_id'] = user.public_id
+    user_data['id'] = user.id
     user_data['name'] = user.name
     user_data['password'] = user.password
     user_data['isadmin'] = user.isadmin
@@ -117,6 +118,8 @@ def setUserData(user_data, user):
     user_data['mobile'] = user.mobile
     user_data['rank'] = user.rank
     user_data['avatar'] = user.avatar
+    user_data['create_date'] = user.create_date.strftime(
+        '%Y-%m-%d %H:%M:%S')
 
 
 @ user_api.route('/register', methods=['POST'])
@@ -141,6 +144,7 @@ def addUser():
         hashed_password = generate_password_hash(
             data['password'], method='sha256')
         avatar = "http://sunlingfeng.0431zy.com/1.png"
+        now_time = datetime.datetime.now()
         new_user = User(
             public_id=str(uuid.uuid4()),
             name=data['name'],
@@ -148,7 +152,8 @@ def addUser():
             email=data['email'],
             mobile=data['mobile'],
             isadmin=False,
-            avatar=avatar
+            avatar=avatar,
+            create_date=now_time,
         )
 
         db.session.add(new_user)
@@ -185,11 +190,11 @@ def delete_user(current_user, public_id):
 
     if not user:
         return jsonify({'message': 'No user found!'})
-
+    username = user.name
     db.session.delete(user)
     db.session.commit()
 
-    return jsonify({'message': 'The user has been deleted!'})
+    return jsonify({'message': 'The user {} has been deleted!'.format(username)})
 
 
 @user_api.route('/change_avatar/<public_id>', methods=['PUT'])
@@ -226,7 +231,7 @@ def login():
         token = jwt.encode({'public_id': user.public_id, 'exp': datetime.datetime.utcnow(
         ) + datetime.timedelta(minutes=60*24)}, app.config['SECRET_KEY'])
 
-        return jsonify({'token': token.decode('UTF-8'), 'public_id': user.public_id, 'user_id': user.id, 'name': user.name, 'avatar': user.avatar})
+        return jsonify({'token': token.decode('UTF-8'), 'public_id': user.public_id, 'user_id': user.id, 'name': user.name, 'avatar': user.avatar, 'isadmin': user.isadmin})
 
     return make_response({'message': "用户名或密码错误。"}, 401, {'WWW-Authenticate': 'Basic realm="Login required!"'})
 
