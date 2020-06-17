@@ -44,6 +44,8 @@ def data():
     # here we want to get the value of user (i.e. ?user=some-value)
     output = []
     userName = request.args.get('userName')
+    userName = userName.replace('%', '\\').encode().decode('unicode-escape')
+
     if userName == "":
         return jsonify(output)
     else:

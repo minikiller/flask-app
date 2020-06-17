@@ -4,19 +4,21 @@ Authorization: Basic sunlf1:1
 
 ###
 POST https://localhost:5000/games/ HTTP/1.1
-x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiIxNGM0OGRjNC0zMGYwLTQwNmEtOGRlNS03ZDRiOGU2ZDQ3MzAiLCJleHAiOjE1OTA4ODg2NTR9.T1HV_QQUTR544w5ZK9JvcDMCVZU9dL-EjUGUwgNsN5w
+x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiIxNGM0OGRjNC0zMGYwLTQwNmEtOGRlNS03ZDRiOGU2ZDQ3MzAiLCJleHAiOjE1OTIzOTM0MTh9.615QCQUkPnCKX-fONm7t57NjZ3g3tpa0wQ6-XU_QgI4
 Content-Type: application/json
 
 {
     "name": "测试对局1111",
     "comment": "ka rer",
-    "blackone_id": "sunlf1",
     "user_id": 1,
-    "blacktwo_id": "sunlf2",
-    "whiteone_id": "sunlf3",
-    "whitetwo_id": "admin",
+    "opponent":[
+    {"name": "sunlf1"},
+    {"name": "王二"},
+    {"name": "sunlf3"},
+    {"name": "admin"}],
+    
     "start_time":"2020-10-22 22:23:00",
-    "total_time": 6000,
+    "total_time": 60,
     "public": true,
     "password": null
 }
@@ -45,3 +47,14 @@ x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiI1ODZmNzB
 Content-Type: application/json
 
 {"black_info":"sunlf1&sunlf2","white_info":"sunhy1&sunhy2","kifu_data":"(\n;TM[60]KM[7.5]PB[sunlf1&sunlf2]PW[sunhy1&sunhy2]SZ[19]AP[WGo.js:2]FF[4]GM[1]CA[UTF-8]BL[60]WL[60]\n;B[qe]BL[60]WL[47]\n;W[pc]BL[60]WL[47])","result":"白超时胜"}
+
+
+###
+POST https://localhost:5000/users/data HTTP/1.1
+Content-Type: application/json; charset=utf-8
+
+{
+    "userName":"王二"
+}
+
+ 
