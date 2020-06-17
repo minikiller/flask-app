@@ -72,3 +72,4 @@ class Kifu(db.Model):
     black_info = db.Column(db.String(50))
     white_info = db.Column(db.String(50))
     result = db.Column(db.String(50))
+    is_share = db.Column(db.Boolean, default=False)
