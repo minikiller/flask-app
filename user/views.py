@@ -11,6 +11,13 @@ from functools import wraps
 import alioss
 from user import user_api
 from model import User, db, app
+rank = {1: "业余1段",
+        2: "业余2段",
+        3: "业余3段",
+        4: "业余4段",
+        5: "业余5段",
+        6: "业余6段",
+        7: "业余7段"}
 
 
 def token_required(f):
@@ -153,6 +160,7 @@ def addUser():
             password=hashed_password,
             email=data['email'],
             mobile=data['mobile'],
+            rank=data['rank'],
             isadmin=False,
             avatar=avatar,
             create_date=now_time,
@@ -232,8 +240,10 @@ def login():
     if check_password_hash(user.password, auth.password):
         token = jwt.encode({'public_id': user.public_id, 'exp': datetime.datetime.utcnow(
         ) + datetime.timedelta(minutes=60*24)}, app.config['SECRET_KEY'])
-
-        return jsonify({'token': token.decode('UTF-8'), 'public_id': user.public_id, 'user_id': user.id, 'name': user.name, 'avatar': user.avatar, 'isadmin': user.isadmin})
+        _rank = rank.get(user.rank, "级别不详")
+        result = {'token': token.decode('UTF-8'), 'public_id': user.public_id, 'user_id': user.id,
+                  'name': user.name, 'avatar': user.avatar, 'isadmin': user.isadmin, 'rank': _rank}
+        return jsonify(result)
 
     return make_response({'message': "用户名或密码错误。"}, 401, {'WWW-Authenticate': 'Basic realm="Login required!"'})
 
