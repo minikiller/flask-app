@@ -15,12 +15,12 @@ from util.tts import getVoice
 def get_tts(current_user):
     data = request.get_json()
     result = getVoice(current_user.name+data["text"])
-    return jsonify({'message': "棋谱保存成功!", "url": result})
+    return jsonify({'message': "语音创建成功!", "url": result})
 
 
 @ util_api.route('/chat', methods=['POST'])
 @ token_required
 def get_chat(current_user):
     data = request.get_json()
-    result = getVoice(current_user.name+"说 "+data["text"])
-    return jsonify({'message': "棋谱保存成功!", "url": result})
+    result = getVoice(data["username"]+"说 "+data["text"])
+    return jsonify({'message': "语音创建成功!", "url": result})
