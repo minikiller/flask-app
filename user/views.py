@@ -252,7 +252,7 @@ def login():
 @ token_required
 def change_password_user(current_user):
     data = request.get_json()
-    user = User.query.filter_by(user_id=current_user.id).first()
+    user = User.query.filter_by(id=current_user.id).first()
     hashed_password = generate_password_hash(data['password'], method='sha256')
     if not user:
         return jsonify({'message': 'No user found!'})
