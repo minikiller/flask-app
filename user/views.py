@@ -248,6 +248,20 @@ def login():
     return make_response({'message': "用户名或密码错误。"}, 401, {'WWW-Authenticate': 'Basic realm="Login required!"'})
 
 
+@ user_api.route('/changepassword', methods=['POST'])
+@ token_required
+def change_password_user(current_user):
+    data = request.get_json()
+    user = User.query.filter_by(user_id=current_user.id).first()
+    hashed_password = generate_password_hash(data['password'], method='sha256')
+    if not user:
+        return jsonify({'message': 'No user found!'})
+    user.password = hashed_password
+    db.session.commit()
+
+    return jsonify({'message': '密码修改成功'})
+
+
 """ @app.after_request
 def after_request(response):
     response.headers.add('Access-Control-Allow-Origin',
