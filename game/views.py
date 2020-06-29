@@ -161,15 +161,20 @@ def begin_game(current_user, game_id):
 @ game_api.route('/<game_id>', methods=['DELETE'])
 @ token_required
 def delete_game(current_user, game_id):
-    game = Game.query.filter_by(id=game_id, user_id=current_user.id).first()
+    if current_user.isadmin:
+        game = Game.query.filter_by(
+            id=game_id, user_id=current_user.id).first()
+    else:
+        game = Game.query.filter_by(
+            id=game_id, user_id=current_user.id).first()
 
     if not game:
         return jsonify({'message': 'No game found!'})
     name = game.name
     # 未开始，进行中，已结束
-    if game.status == '未开始':
+    if game.status == '未开始' or current_user.isadmin:
         db.session.delete(game)
         db.session.commit()
-        return jsonify({'message': name+'对局删除成功!'})
+        return jsonify({'message:[': name+']对局删除成功!'})
     else:
-        return jsonify({'message': name+'对局正在进行或者已经结束，无法删除!'})
+        return jsonify({'message:[': name+']对局正在进行或者已经结束，无法删除!'})
