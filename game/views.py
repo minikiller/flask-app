@@ -163,7 +163,7 @@ def begin_game(current_user, game_id):
 def delete_game(current_user, game_id):
     if current_user.isadmin:
         game = Game.query.filter_by(
-            id=game_id, user_id=current_user.id).first()
+            id=game_id).first()
     else:
         game = Game.query.filter_by(
             id=game_id, user_id=current_user.id).first()
