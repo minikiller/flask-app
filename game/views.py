@@ -33,8 +33,8 @@ def get_all_games(current_user):
 
 
 @ game_api.route('/<game_id>', methods=['GET'])
-@ token_required
-def get_one_game(current_user, game_id):
+# @ token_required
+def get_one_game(game_id):
     game = Game.query.filter_by(id=game_id).first()
     # game = Game.query.filter_by(id=game_id, user_id=current_user.id).first()
 
