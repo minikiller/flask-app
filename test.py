@@ -1,7 +1,3 @@
-def hello(**setting):
-    setting.setdefault("name", "sunlf")
-    setting.setdefault("first", "ssd")
-    print(setting)
-
-
-hello(name='123', data=1233)
+str="hello_123_result.txt"
+id=str.split("_")[1]
+print(id)

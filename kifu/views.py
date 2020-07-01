@@ -6,6 +6,10 @@ from user.views import token_required
 import datetime
 import os
 from sqlalchemy import desc
+import subprocess
+
+leela_target_path = "/home/sunlingfeng/project/vi/"
+ai_str = "python {}sgfanalyze.py {} --leela ./leela_0110_linux_x64 1>{}"
 
 
 @ kifu_api.route('/', methods=['POST'])
@@ -40,11 +44,47 @@ def get_all_kifus(current_user):
         kifu_data['white_info'] = kifu.white_info
         kifu_data['result'] = kifu.result
         kifu_data['is_share'] = kifu.is_share
+        kifu_data['is_analyse'] = kifu.is_analyse
         kifu_data['create_date'] = kifu.create_date.strftime(
             '%Y-%m-%d %H:%M:%S')
         output.append(kifu_data)
 
     return jsonify({'kifus': output})
+
+
+@ kifu_api.route('/analyse/<kifu_id>', methods=['GET'])
+@ token_required
+def get_analyse_kifus(current_user, kifu_id):
+    kifu = Kifu.query.filter_by(id=kifu_id).first()
+    if not kifu:
+        return jsonify({'message': 'No kifu found!'})
+    # begin to analyse kifu
+    # python sgfanalyze.py 2020-06-30.sgf --leela ./leela_0110_linux_x64 1>2020-06-30result.sgf
+    # /home/sunlingfeng/project/vi
+    file_name = kifu.create_date.strftime(
+        '%Y-%m-%d')+"_"+kifu_id+".sgf"
+    result_file_name = kifu.create_date.strftime(
+        '%Y-%m-%d')+"_"+kifu_id+"_result.sgf"
+    with open(file_name, mode='w', encoding='utf-8') as outFile:
+        outFile.write(leela_target_path+kifu.kifu_data)
+    p = subprocess.Popen(ai_str.format(
+        leela_target_path, file_name, result_file_name), shell=True)
+    print("a new subprocess is created, it pid is {}".format(p.pid))
+    return jsonify({'message': 'ai 分析的任务已经创建，请耐心等候！'})
+
+
+@ kifu_api.route('/analyse/<kifu_id>', methods=['POST'])
+# @ token_required
+def post_analyse_kifus(current_user, kifu_id):
+    kifu = Kifu.query.filter_by(id=kifu_id).first()
+    if not kifu:
+        return jsonify({'message': 'No kifu found!'})
+    # begin to save analysed kifu
+    data = request.get_json()
+    kifu.analyse_data = data['analyse_data']
+    kifu.is_analyse = True
+    db.session.commit()
+    return jsonify({'message': 'Analysed kifu saved succeed!'})
 
 
 @ kifu_api.route('/share', methods=['GET'])
@@ -92,9 +132,31 @@ def download_one_kifu(kifu_id):
         return jsonify({'message': 'No kifu found!'})
 
     file_name = kifu.create_date.strftime(
-        '%Y-%m-%d')+".sgf"
+        '%Y-%m-%d')+"_"+kifu_id+".sgf"
     with open(file_name, mode='w', encoding='utf-8') as outFile:
         outFile.write(kifu.kifu_data)
+    directory = os.getcwd()
+    # result = send_file(os.path.join(directory, file_name), as_attachment=True)
+    result = send_from_directory(directory,
+                                 file_name, as_attachment=True)
+    result.headers["x-suggested-filename"] = file_name
+    return result
+
+# 下载ai分析的棋谱
+
+
+@ kifu_api.route('/ai/<kifu_id>', methods=['GET'])
+# @ token_required
+def download_ai_kifu(kifu_id):
+    kifu = Kifu.query.filter_by(id=kifu_id).first()
+
+    if not kifu:
+        return jsonify({'message': 'No kifu found!'})
+
+    file_name = kifu.create_date.strftime(
+        '%Y-%m-%d')+kifu_id+"_result.sgf"
+    with open(file_name, mode='w', encoding='utf-8') as outFile:
+        outFile.write(kifu.analyse_data)
     directory = os.getcwd()
     # result = send_file(os.path.join(directory, file_name), as_attachment=True)
     result = send_from_directory(directory,

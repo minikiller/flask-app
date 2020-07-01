@@ -96,6 +96,32 @@ def get_all_users(current_user):
     return jsonify(output)
 
 
+"""
+分页
+GET https://localhost:5000/users/page?page=3&per_page=2
+"""
+
+@ user_api.route('/page', methods=['GET'])
+@ token_required
+def get_all_users_page(current_user):
+    page = int(request.args.get('page', 1))
+    per_page = int(request.args.get('per_page', 10))
+
+    if not current_user.isadmin:
+        return jsonify({'message': 'Cannot perform that function!'})
+
+    paginate = User.query.paginate(page, per_page, error_out=False)
+
+    output = []
+
+    for user in paginate.items:
+        user_data = {}
+        setUserData(user_data, user)
+        output.append(user_data)
+    result = {"total": paginate.total, "data": output}
+    return jsonify(result)
+
+
 @ user_api.route('/<public_id>', methods=['GET'])
 @ token_required
 def get_one_user(current_user, public_id):
