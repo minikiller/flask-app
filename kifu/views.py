@@ -38,6 +38,16 @@ def get_kifu_moves(data):
         move_num += 1
     return move_num
 
+@ kifu_api.route('/update', methods=['GET'])
+def update_moves():
+    kifus = Kifu.query.order_by(desc(Kifu.create_date)).all()
+    for kifu in kifus:
+        data=kifu_data['kifu_data']
+        moves=get_kifu_moves(data)
+        kifu.moves=moves
+        db.session.commit()
+    return jsonify({'message': 'kifu update succeed!'})
+
 @ kifu_api.route('/', methods=['GET'])
 @ token_required
 def get_all_kifus(current_user):
