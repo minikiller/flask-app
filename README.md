@@ -12,6 +12,7 @@ python api.py
 
 ALTER TABLE kifu ADD column is_analyse boolean NOT NULL default 0;
 ALTER TABLE kifu ADD column analyse_data char(2500);
+ALTER TABLE kifu ADD column moves INTEGER NOT NULL default 0; 
 
 ### leela zero
 

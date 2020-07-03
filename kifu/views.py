@@ -7,6 +7,8 @@ import datetime
 import os
 from sqlalchemy import desc
 import subprocess
+from util.sgflib import  SGFParser
+
 
 leela_target_path = "/home/sunlingfeng/project/vi/"
 ai_str = "python {}sgfanalyze.py {} --leela ./leela_0110_linux_x64 1>{}"
@@ -18,14 +20,23 @@ def create_kifu(current_user):
     data = request.get_json()
     now_time = datetime.datetime.now()
     # .strftime('%Y-%m-%d %H:%M:%S')
+    moves=get_kifu_moves(data['kifu_data'])
     new_kifu = Kifu(kifu_data=data['kifu_data'], create_date=now_time,
                     user_id=current_user.id, black_info=data['black_info'],
-                    white_info=data['white_info'], result=data["result"])
+                    white_info=data['white_info'], result=data["result"],moves=moves)
     db.session.add(new_kifu)
     db.session.commit()
 
     return jsonify({'message': "棋谱保存成功!"})
 
+def get_kifu_moves(data):
+    sgf_data = SGFParser(data).parse()
+    move_num = 0
+    cursor=sgf_data.cursor()
+    while not  cursor.atEnd:
+        cursor.next()
+        move_num += 1
+    return move_num
 
 @ kifu_api.route('/', methods=['GET'])
 @ token_required
