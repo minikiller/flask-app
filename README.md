@@ -82,3 +82,18 @@ cmake --build .
     ]
 }
 ```
+
+### leela analysis
+####
+https://github.com/lightvector/leela-analysis
+基于python2的leela分析程序，已经试用中，但是leela的版本是0.10的，作者不提供以后的版本支持。
+####
+https://github.com/jumpman24/sgf-analyzer
+在以上版本基础上进行的升级，基于python3的leela分析程序，还未深入研究
+
+####
+https://github.com/fohristiwhirl/leela_zero_analysis
+> python代码，通过gtp和ai交互，并获得胜率，同时提供胜率的折线图输出
+
+####
+https://github.com/sanderland/katrain
