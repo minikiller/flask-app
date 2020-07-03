@@ -128,6 +128,7 @@ def get_share_kifus(current_user):
         kifu_data['black_info'] = kifu.black_info
         kifu_data['white_info'] = kifu.white_info
         kifu_data['result'] = kifu.result
+        kifu_data['moves'] = kifu.moves
         kifu_data['is_share'] = kifu.is_share
         kifu_data['create_date'] = kifu.create_date.strftime(
             '%Y-%m-%d %H:%M:%S')
