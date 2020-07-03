@@ -7,7 +7,7 @@ import datetime
 import os
 from sqlalchemy import desc
 import subprocess
-from util.sgflib import  SGFParser
+from util.sgflib import SGFParser
 
 
 leela_target_path = "/home/sunlingfeng/project/vi/"
@@ -20,33 +20,36 @@ def create_kifu(current_user):
     data = request.get_json()
     now_time = datetime.datetime.now()
     # .strftime('%Y-%m-%d %H:%M:%S')
-    moves=get_kifu_moves(data['kifu_data'])
+    moves = get_kifu_moves(data['kifu_data'])
     new_kifu = Kifu(kifu_data=data['kifu_data'], create_date=now_time,
                     user_id=current_user.id, black_info=data['black_info'],
-                    white_info=data['white_info'], result=data["result"],moves=moves)
+                    white_info=data['white_info'], result=data["result"], moves=moves)
     db.session.add(new_kifu)
     db.session.commit()
 
     return jsonify({'message': "棋谱保存成功!"})
 
+
 def get_kifu_moves(data):
     sgf_data = SGFParser(data).parse()
     move_num = 0
-    cursor=sgf_data.cursor()
-    while not  cursor.atEnd:
+    cursor = sgf_data.cursor()
+    while not cursor.atEnd:
         cursor.next()
         move_num += 1
     return move_num
+
 
 @ kifu_api.route('/update', methods=['GET'])
 def update_moves():
     kifus = Kifu.query.order_by(desc(Kifu.create_date)).all()
     for kifu in kifus:
-        data=kifu_data['kifu_data']
-        moves=get_kifu_moves(data)
-        kifu.moves=moves
+        data = kifu.kifu_data
+        moves = get_kifu_moves(data)
+        kifu.moves = moves
         db.session.commit()
     return jsonify({'message': 'kifu update succeed!'})
+
 
 @ kifu_api.route('/', methods=['GET'])
 @ token_required
@@ -64,6 +67,7 @@ def get_all_kifus(current_user):
         kifu_data['black_info'] = kifu.black_info
         kifu_data['white_info'] = kifu.white_info
         kifu_data['result'] = kifu.result
+        kifu_data['moves'] = kifu.moves
         kifu_data['is_share'] = kifu.is_share
         kifu_data['is_analyse'] = kifu.is_analyse
         kifu_data['create_date'] = kifu.create_date.strftime(

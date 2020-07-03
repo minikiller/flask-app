@@ -2,6 +2,8 @@
 GET https://localhost:5000/login HTTP/1.1
 Authorization: Basic admin:1
 
+### 用户登陆
+GET https://localhost:5000/kifus/update HTTP/1.1
 
 ###
 GET https://localhost:5000/users/page?page=3&per_page=2
