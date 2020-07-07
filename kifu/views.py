@@ -8,10 +8,16 @@ import os
 from sqlalchemy import desc
 import subprocess
 from util.sgflib import SGFParser
+from util import settings
+from yaml import load
 
+# leela_target_path = "/home/sunlingfeng/project/vi/"
+# ai_str = "python {}sgfanalyze.py {} --leela ./leela_0110_linux_x64 1>{}"
+AI_STR = "python3 {}sgfanalyze.py {} --bot leela-zero"
+with open(settings.PATH_TO_CONFIG) as yaml_stream:
+    yaml_data = load(yaml_stream)
 
-leela_target_path = "/home/sunlingfeng/project/vi/"
-ai_str = "python {}sgfanalyze.py {} --leela ./leela_0110_linux_x64 1>{}"
+SGF_ANALYZER = yaml_data['sgf_analyzer']
 
 
 @ kifu_api.route('/', methods=['POST'])
@@ -78,22 +84,23 @@ def get_all_kifus(current_user):
 
 
 @ kifu_api.route('/analyse/<kifu_id>', methods=['GET'])
-@ token_required
-def get_analyse_kifus(current_user, kifu_id):
+# @ token_required
+def get_analyse_kifus(kifu_id):
+    # def get_analyse_kifus(current_user, kifu_id):
     kifu = Kifu.query.filter_by(id=kifu_id).first()
     if not kifu:
         return jsonify({'message': 'No kifu found!'})
     # begin to analyse kifu
     # python sgfanalyze.py 2020-06-30.sgf --leela ./leela_0110_linux_x64 1>2020-06-30result.sgf
     # /home/sunlingfeng/project/vi
-    file_name = kifu.create_date.strftime(
+    file_name = SGF_ANALYZER["path"]+kifu.create_date.strftime(
         '%Y-%m-%d')+"_"+kifu_id+".sgf"
-    result_file_name = kifu.create_date.strftime(
-        '%Y-%m-%d')+"_"+kifu_id+"_result.sgf"
+    """ result_file_name = kifu.create_date.strftime(
+        '%Y-%m-%d')+"_"+kifu_id+"_result.sgf" """
     with open(file_name, mode='w', encoding='utf-8') as outFile:
-        outFile.write(leela_target_path+kifu.kifu_data)
-    p = subprocess.Popen(ai_str.format(
-        leela_target_path, file_name, result_file_name), shell=True)
+        outFile.write(kifu.kifu_data)
+    p = subprocess.Popen(AI_STR.format(
+        SGF_ANALYZER["path"], file_name), shell=True)
     print("a new subprocess is created, it pid is {}".format(p.pid))
     return jsonify({'message': 'ai 分析的任务已经创建，请耐心等候！'})
 
@@ -180,7 +187,7 @@ def download_ai_kifu(kifu_id):
         return jsonify({'message': 'No kifu found!'})
 
     file_name = kifu.create_date.strftime(
-        '%Y-%m-%d')+kifu_id+"_result.sgf"
+        '%Y-%m-%d')+kifu_id+SGF_ANALYZER["postfix"]+".sgf"
     with open(file_name, mode='w', encoding='utf-8') as outFile:
         outFile.write(kifu.analyse_data)
     directory = os.getcwd()

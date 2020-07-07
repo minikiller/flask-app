@@ -1,0 +1,8 @@
+# 10 DEBUG    - shows bot output
+# 20 INFO     - normal
+# 30 WARNING  - mistakes
+# 40 ERROR    - script errors
+log_level: 20
+sgf_analyzer:
+  path: /home/sunlingfeng/project/sgf-analyzer/
+  postfix: _leela-zero
