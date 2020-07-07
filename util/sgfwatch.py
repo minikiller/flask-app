@@ -66,6 +66,6 @@ class ImagesEventHandler(RegexMatchingEventHandler):
 
 
 if __name__ == "__main__":
-    # src_path = sys.argv[1] if len(sys.argv) > 1 else '.'
-    src_path = "/Users/sunlf/Documents/git-project/sgf-analyzer/"
+    src_path = sys.argv[1] if len(sys.argv) > 1 else '.'
+    # src_path = "/Users/sunlf/Documents/git-project/sgf-analyzer/"
     ImagesWatcher(src_path).run()
