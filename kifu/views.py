@@ -13,7 +13,7 @@ from yaml import load
 
 # leela_target_path = "/home/sunlingfeng/project/vi/"
 # ai_str = "python {}sgfanalyze.py {} --leela ./leela_0110_linux_x64 1>{}"
-AI_STR = "{}python3 sgfanalyze.py {} --bot leela-zero"
+AI_STR = "python3 sgfanalyze.py {} --bot leela-zero"
 with open(settings.PATH_TO_CONFIG) as yaml_stream:
     yaml_data = load(yaml_stream)
 
@@ -100,7 +100,7 @@ def get_analyse_kifus(kifu_id):
     with open(SGF_ANALYZER["path"]+file_name, mode='w', encoding='utf-8') as outFile:
         outFile.write(kifu.kifu_data)
     p = subprocess.Popen(AI_STR.format(
-        SGF_ANALYZER["path"], file_name), shell=True)
+        file_name), shell=True, cwd=SGF_ANALYZER["path"])
     print("a new subprocess is created, it pid is {}".format(p.pid))
     return jsonify({'message': 'ai 分析的任务已经创建，请耐心等候！'})
 
