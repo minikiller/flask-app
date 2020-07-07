@@ -40,7 +40,7 @@ class ImagesWatcher:
 
 
 class ImagesEventHandler(RegexMatchingEventHandler):
-    IMAGES_REGEX = [r".*[^{postpix}]\.sgf$"]
+    IMAGES_REGEX = [r".*[^_leela-zero]\.sgf$"]
 
     def __init__(self):
         super().__init__(self.IMAGES_REGEX)
@@ -51,6 +51,7 @@ class ImagesEventHandler(RegexMatchingEventHandler):
     def process(self, event):
         filename, ext = os.path.splitext(event.src_path)
         filename = f"{filename}{postpix}.sgf"
+        print("get a new file {}".format(filename))
         kifu_id = filename.split("_")[1]
         print("kifu id is {}".format(kifu_id))
         url = 'https://localhost:5000/analyse/'+kifu_id
