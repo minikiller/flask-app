@@ -2,6 +2,7 @@ import sys
 import os
 import time
 import requests
+import json
 
 from watchdog.observers import Observer
 from watchdog.events import RegexMatchingEventHandler
@@ -55,14 +56,16 @@ class ImagesEventHandler(RegexMatchingEventHandler):
         print("get a new file {}".format(filename))
         kifu_id = filename.split("_")[1]
         print("kifu id is {}".format(kifu_id))
-        url = 'https://bibiweiqi.com:5000/analyse/'+kifu_id
+        url = 'https://localhost:5000/kifus/analyse/'+kifu_id
         with open(event.src_path, "r") as f:
             data = f.read()
         d = {'analyse_data': data}
-        r = requests.post(url, data=d)
+        r = requests.post(url, data=json.dumps(d), verify=False, headers={
+                          "Content-Type": "application/json"})
         # extracting data in json format
         data = r.json()
-        print(r.message)
+        print(data)
+        print(data.message)
         # print("i founde it {}".format(filename))
 
 

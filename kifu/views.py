@@ -63,8 +63,13 @@ def get_all_kifus(current_user):
     kifus = Kifu.query.order_by(desc(Kifu.create_date)).filter_by(
         user_id=current_user.id).all()
 
-    output = []
+    output = saveData(kifus)
 
+    return jsonify({'kifus': output})
+
+
+def saveData(kifus):
+    output = []
     for kifu in kifus:
         kifu_data = {}
         kifu_data['id'] = kifu.id
@@ -76,10 +81,20 @@ def get_all_kifus(current_user):
         kifu_data['moves'] = kifu.moves
         kifu_data['is_share'] = kifu.is_share
         kifu_data['is_analyse'] = kifu.is_analyse
+        kifu_data['analyse_data'] = kifu.analyse_data
         kifu_data['create_date'] = kifu.create_date.strftime(
             '%Y-%m-%d %H:%M:%S')
         output.append(kifu_data)
+    return output
 
+
+@ kifu_api.route('/<kifu_id>', methods=['GET'])
+# @ token_required
+def get_kifus_byid(kifu_id):
+    kifus = Kifu.query.order_by(desc(Kifu.create_date)).filter_by(
+        id=kifu_id).all()
+
+    output = saveData(kifus)
     return jsonify({'kifus': output})
 
 
@@ -107,7 +122,7 @@ def get_analyse_kifus(kifu_id):
 
 @ kifu_api.route('/analyse/<kifu_id>', methods=['POST'])
 # @ token_required
-def post_analyse_kifus(current_user, kifu_id):
+def post_analyse_kifus(kifu_id):
     kifu = Kifu.query.filter_by(id=kifu_id).first()
     if not kifu:
         return jsonify({'message': 'No kifu found!'})
@@ -125,21 +140,7 @@ def get_share_kifus(current_user):
     kifus = Kifu.query.filter_by(is_share=True).order_by(
         desc(Kifu.create_date)).all()
 
-    output = []
-
-    for kifu in kifus:
-        kifu_data = {}
-        kifu_data['id'] = kifu.id
-        kifu_data['kifu_data'] = kifu.kifu_data
-        kifu_data['user_id'] = kifu.user_id
-        kifu_data['black_info'] = kifu.black_info
-        kifu_data['white_info'] = kifu.white_info
-        kifu_data['result'] = kifu.result
-        kifu_data['moves'] = kifu.moves
-        kifu_data['is_share'] = kifu.is_share
-        kifu_data['create_date'] = kifu.create_date.strftime(
-            '%Y-%m-%d %H:%M:%S')
-        output.append(kifu_data)
+    output = saveData(kifus)
 
     return jsonify({'kifus': output})
 
