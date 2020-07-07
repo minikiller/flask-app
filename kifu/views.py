@@ -13,7 +13,7 @@ from yaml import load
 
 # leela_target_path = "/home/sunlingfeng/project/vi/"
 # ai_str = "python {}sgfanalyze.py {} --leela ./leela_0110_linux_x64 1>{}"
-AI_STR = "python3 {}sgfanalyze.py {} --bot leela-zero"
+AI_STR = "{}python3 sgfanalyze.py {} --bot leela-zero"
 with open(settings.PATH_TO_CONFIG) as yaml_stream:
     yaml_data = load(yaml_stream)
 
@@ -93,11 +93,11 @@ def get_analyse_kifus(kifu_id):
     # begin to analyse kifu
     # python sgfanalyze.py 2020-06-30.sgf --leela ./leela_0110_linux_x64 1>2020-06-30result.sgf
     # /home/sunlingfeng/project/vi
-    file_name = SGF_ANALYZER["path"]+kifu.create_date.strftime(
+    file_name = kifu.create_date.strftime(
         '%Y-%m-%d')+"_"+kifu_id+".sgf"
     """ result_file_name = kifu.create_date.strftime(
         '%Y-%m-%d')+"_"+kifu_id+"_result.sgf" """
-    with open(file_name, mode='w', encoding='utf-8') as outFile:
+    with open(SGF_ANALYZER["path"]+file_name, mode='w', encoding='utf-8') as outFile:
         outFile.write(kifu.kifu_data)
     p = subprocess.Popen(AI_STR.format(
         SGF_ANALYZER["path"], file_name), shell=True)
