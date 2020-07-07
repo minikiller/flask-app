@@ -40,7 +40,8 @@ class ImagesWatcher:
 
 
 class ImagesEventHandler(RegexMatchingEventHandler):
-    IMAGES_REGEX = [r".*[^_leela-zero]\.sgf$"]
+    # IMAGES_REGEX = [r".*[^_leela-zero]\.sgf$"]
+    IMAGES_REGEX = [r"(.*?)_leela-zero.sgf"]
 
     def __init__(self):
         super().__init__(self.IMAGES_REGEX)
@@ -50,12 +51,12 @@ class ImagesEventHandler(RegexMatchingEventHandler):
 
     def process(self, event):
         filename, ext = os.path.splitext(event.src_path)
-        filename = f"{filename}{postpix}.sgf"
+        filename = f"{filename}"
         print("get a new file {}".format(filename))
         kifu_id = filename.split("_")[1]
         print("kifu id is {}".format(kifu_id))
-        url = 'https://localhost:5000/analyse/'+kifu_id
-        with open(filename, "r") as f:
+        url = 'https://bibiweiqi.com:5000/analyse/'+kifu_id
+        with open(event.src_path, "r") as f:
             data = f.read()
         d = {'analyse_data': data}
         r = requests.post(url, data=d)
