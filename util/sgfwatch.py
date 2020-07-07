@@ -6,6 +6,8 @@ import requests
 from watchdog.observers import Observer
 from watchdog.events import RegexMatchingEventHandler
 
+postpix = "_leela-zero"
+
 
 class ImagesWatcher:
     def __init__(self, src_path):
@@ -38,7 +40,7 @@ class ImagesWatcher:
 
 
 class ImagesEventHandler(RegexMatchingEventHandler):
-    IMAGES_REGEX = [r".*[^_result]\.sgf$"]
+    IMAGES_REGEX = [r".*[^{postpix}]\.sgf$"]
 
     def __init__(self):
         super().__init__(self.IMAGES_REGEX)
@@ -48,7 +50,7 @@ class ImagesEventHandler(RegexMatchingEventHandler):
 
     def process(self, event):
         filename, ext = os.path.splitext(event.src_path)
-        filename = f"{filename}_result.sgf"
+        filename = f"{filename}{postpix}.sgf"
         kifu_id = filename.split("_")[1]
         print("kifu id is {}".format(kifu_id))
         url = 'https://localhost:5000/analyse/'+kifu_id
@@ -63,5 +65,6 @@ class ImagesEventHandler(RegexMatchingEventHandler):
 
 
 if __name__ == "__main__":
-    src_path = sys.argv[1] if len(sys.argv) > 1 else '.'
+    # src_path = sys.argv[1] if len(sys.argv) > 1 else '.'
+    src_path = "/Users/sunlf/Documents/git-project/sgf-analyzer/"
     ImagesWatcher(src_path).run()
