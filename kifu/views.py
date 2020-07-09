@@ -88,7 +88,7 @@ def saveData(kifus):
     return output
 
 
-@ kifu_api.route('/<kifu_id>', methods=['GET'])
+@ kifu_api.route('/get/<kifu_id>', methods=['GET'])
 # @ token_required
 def get_kifus_byid(kifu_id):
     kifus = Kifu.query.order_by(desc(Kifu.create_date)).filter_by(

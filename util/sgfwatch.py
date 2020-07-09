@@ -6,7 +6,8 @@ import json
 
 from watchdog.observers import Observer
 from watchdog.events import RegexMatchingEventHandler
-
+"""监控一个目录，当有新的文件创建的时候激活
+"""
 postpix = "_leela-zero"
 
 
