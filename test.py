@@ -13,7 +13,7 @@ while not  cursor.atEnd:
 print(move_num) """
 
 from yaml import load
-import util.settings as settings
+import settings as settings
 with open(settings.PATH_TO_CONFIG) as yaml_stream:
     yaml_data = load(yaml_stream)
 

@@ -11,6 +11,8 @@ from functools import wraps
 import alioss
 from user import user_api
 from model import User, db, app
+from log import logger
+
 rank = {1: "业余1段",
         2: "业余2段",
         3: "业余3段",
@@ -272,6 +274,8 @@ def login():
         _rank = rank.get(user.rank, "级别不详")
         result = {'token': token.decode('UTF-8'), 'public_id': user.public_id, 'user_id': user.id, 'win': user.win, 'fail': user.fail,
                   'name': user.name, 'avatar': user.avatar, 'isadmin': user.isadmin, 'rank': _rank}
+        logger.info("a user is log in, name is {}, ip is {}".format(
+            auth.username, request.remote_addr))
         return jsonify(result)
 
     return make_response({'message': "用户名或密码错误。"}, 401, {'WWW-Authenticate': 'Basic realm="Login required!"'})

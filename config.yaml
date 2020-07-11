@@ -4,5 +4,5 @@
 # 40 ERROR    - script errors
 log_level: 20
 sgf_analyzer:
-  path: /home/sunlingfeng/project/sgf-analyzer/
+  path: /Users/sunlf/Documents/git-project/sgf-analyzer/
   postfix: _leela-zero

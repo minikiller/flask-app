@@ -9,7 +9,7 @@ import os
 from sqlalchemy import desc
 import subprocess
 from util.sgflib import SGFParser
-from util import settings
+import settings
 from yaml import load
 
 # leela_target_path = "/home/sunlingfeng/project/vi/"
