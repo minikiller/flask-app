@@ -220,7 +220,7 @@ def download_ai_kifu(kifu_id):
     return result
 
 # var _result = value.match(">([黑白]胜.*)<");
-# 统计对局信息
+# 统计对局信息，按照棋谱循环进行统计
 
 
 @ kifu_api.route('/stat', methods=['GET'])
@@ -237,19 +237,48 @@ def stat_kifu():
 
             for person in black:
                 result = User.query.filter(User.name == person).first()
-                result.win = +1
+                result.win += 1
                 db.session.commit()
             for person in white:
                 result = User.query.filter(User.name == person).first()
-                result.fail = +1
+                result.fail += 1
                 db.session.commit()
         else:  # 如果结果是白胜
             for person in white:
                 result = User.query.filter(User.name == person).first()
-                result.win = +1
+                result.win += 1
                 db.session.commit()
             for person in black:
                 result = User.query.filter(User.name == person).first()
-                result.fail = +1
+                result.fail += 1
                 db.session.commit()
+    return jsonify({'message': 'stat is ok'})
+
+# user_id=current_user.id
+# 按照用户进行统计
+
+
+@ kifu_api.route('/stat/user', methods=['GET'])
+def stat_user_kifu():
+    users = User.query.all()
+    for user in users:
+        kifus = Kifu.query.order_by(desc(Kifu.create_date)).filter_by(
+            user_id=user.id).all()
+        for kifu in kifus:
+            if kifu.moves < 50:
+                continue
+            black_info = kifu.black_info
+            # white_info = kifu.white_info
+            black = black_info.split("&")
+            # white = white_info.split("&")
+            b_black = False
+            for person in black:
+                if user.name in person:
+                    b_black = True
+            result = User.query.filter(User.name == user.name).first()
+            if "黑" in kifu.result and b_black:  # 如果结果是黑胜
+                result.win += 1
+            else:  # 如果结果是白胜
+                result.fail += 1
+            db.session.commit()
     return jsonify({'message': 'stat is ok'})
