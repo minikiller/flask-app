@@ -97,6 +97,23 @@ def get_kifus_byid(kifu_id):
     output = saveData(kifus)
     return jsonify({'kifus': output})
 
+    """胜率分析
+
+    Returns:
+        [type]: [description]
+    """
+
+
+@ kifu_api.route('/winrate/<kifu_id>', methods=['GET'])
+# @ token_required
+def get_winrate_path(kifu_id):
+    kifu = Kifu.query.filter_by(id=kifu_id).first()
+    if not kifu:
+        return jsonify({'message': 'No kifu found!'})
+    file_name = kifu.create_date.strftime(
+        '%Y-%m-%d') + "_" + kifu_id + ".png"
+    return jsonify({'imgPath': '/static/'+file_name})
+
 
 @ kifu_api.route('/analyse/<kifu_id>', methods=['GET'])
 # @ token_required
