@@ -31,6 +31,8 @@ class User(db.Model):
     isadmin = db.Column(db.Boolean)         # 系统管理员
     avatar = db.Column(db.String(200))             # 用户头像照片
     create_date = db.Column(db.DateTime)
+    win = db.Column(db.Integer)  # 胜利局数
+    fail = db.Column(db.Integer)   # 失败局数
 
 
 """游戏对局室
@@ -73,6 +75,6 @@ class Kifu(db.Model):
     white_info = db.Column(db.String(50))
     result = db.Column(db.String(50))
     is_share = db.Column(db.Boolean, default=False)
-    is_analyse= db.Column(db.Boolean, default=False) # 是否ai分析完毕
-    analyse_data = db.Column(db.String(2500)) # ai 分析的棋谱结果
-    moves=db.Column(db.Integer) # 棋谱的手数
+    is_analyse = db.Column(db.Boolean, default=False)  # 是否ai分析完毕
+    analyse_data = db.Column(db.String(2500))  # ai 分析的棋谱结果
+    moves = db.Column(db.Integer)  # 棋谱的手数

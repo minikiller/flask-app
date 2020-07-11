@@ -101,6 +101,7 @@ def get_all_users(current_user):
 GET https://localhost:5000/users/page?page=3&per_page=2
 """
 
+
 @ user_api.route('/page', methods=['GET'])
 @ token_required
 def get_all_users_page(current_user):
@@ -153,6 +154,8 @@ def setUserData(user_data, user):
     user_data['mobile'] = user.mobile
     user_data['rank'] = user.rank
     user_data['avatar'] = user.avatar
+    user_data['win'] = user.win
+    user_data['fail'] = user.fail
     user_data['create_date'] = user.create_date.strftime(
         '%Y-%m-%d %H:%M:%S')
 
@@ -267,7 +270,7 @@ def login():
         token = jwt.encode({'public_id': user.public_id, 'exp': datetime.datetime.utcnow(
         ) + datetime.timedelta(minutes=60*24)}, app.config['SECRET_KEY'])
         _rank = rank.get(user.rank, "级别不详")
-        result = {'token': token.decode('UTF-8'), 'public_id': user.public_id, 'user_id': user.id,
+        result = {'token': token.decode('UTF-8'), 'public_id': user.public_id, 'user_id': user.id, 'win': user.win, 'fail': user.fail,
                   'name': user.name, 'avatar': user.avatar, 'isadmin': user.isadmin, 'rank': _rank}
         return jsonify(result)
 

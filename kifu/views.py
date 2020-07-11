@@ -3,6 +3,7 @@ from flask import jsonify, request, send_from_directory
 from model import db, Kifu
 from kifu import kifu_api
 from user.views import token_required
+from user.views import User
 import datetime
 import os
 from sqlalchemy import desc
@@ -34,6 +35,9 @@ def create_kifu(current_user):
     db.session.commit()
 
     return jsonify({'message': "棋谱保存成功!"})
+
+
+# 获得棋局的手数
 
 
 def get_kifu_moves(data):
@@ -214,3 +218,38 @@ def download_ai_kifu(kifu_id):
                                  file_name, as_attachment=True)
     result.headers["x-suggested-filename"] = file_name
     return result
+
+# var _result = value.match(">([黑白]胜.*)<");
+# 统计对局信息
+
+
+@ kifu_api.route('/stat', methods=['GET'])
+def stat_kifu():
+    kifus = Kifu.query.all()
+    for kifu in kifus:
+        if kifu.moves < 50:
+            continue
+        black_info = kifu.black_info
+        white_info = kifu.white_info
+        black = black_info.split("&")
+        white = white_info.split("&")
+        if "黑" in kifu.result:  # 如果结果是黑胜
+
+            for person in black:
+                result = User.query.filter(User.name == person).first()
+                result.win = +1
+                db.session.commit()
+            for person in white:
+                result = User.query.filter(User.name == person).first()
+                result.fail = +1
+                db.session.commit()
+        else:  # 如果结果是白胜
+            for person in white:
+                result = User.query.filter(User.name == person).first()
+                result.win = +1
+                db.session.commit()
+            for person in black:
+                result = User.query.filter(User.name == person).first()
+                result.fail = +1
+                db.session.commit()
+    return jsonify({'message': 'stat is ok'})

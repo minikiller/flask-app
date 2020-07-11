@@ -178,3 +178,6 @@ def delete_game(current_user, game_id):
         return jsonify({'message:[': name+']对局删除成功!'})
     else:
         return jsonify({'message:[': name+']对局正在进行或者已经结束，无法删除!'})
+
+
+
