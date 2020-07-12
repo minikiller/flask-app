@@ -260,6 +260,7 @@ def stat_kifu():
 
 @ kifu_api.route('/stat/user', methods=['GET'])
 def stat_user_kifu():
+    # users = User.query.filter_by(id=6).all()
     users = User.query.all()
     for user in users:
         kifus = Kifu.query.order_by(desc(Kifu.create_date)).filter_by(
@@ -278,7 +279,11 @@ def stat_user_kifu():
             result = User.query.filter(User.name == user.name).first()
             if "黑" in kifu.result and b_black:  # 如果结果是黑胜
                 result.win += 1
-            else:  # 如果结果是白胜
+            elif "黑" in kifu.result and not b_black:  # 如果结果是白胜
+                result.fail += 1
+            elif "白" in kifu.result and not b_black:  # 如果结果是白胜
+                result.win += 1
+            else:
                 result.fail += 1
             db.session.commit()
     return jsonify({'message': 'stat is ok'})
