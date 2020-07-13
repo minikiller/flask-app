@@ -10,13 +10,13 @@ from sqlalchemy import desc
 import subprocess
 from util.sgflib import SGFParser
 import settings
-from yaml import load
+from yaml import load, FullLoader
 
 # leela_target_path = "/home/sunlingfeng/project/vi/"
 # ai_str = "python {}sgfanalyze.py {} --leela ./leela_0110_linux_x64 1>{}"
 AI_STR = "python3 sgfanalyze.py {} --bot leela-zero"
 with open(settings.PATH_TO_CONFIG) as yaml_stream:
-    yaml_data = load(yaml_stream)
+    yaml_data = load(yaml_stream, Loader=FullLoader)
 
 SGF_ANALYZER = yaml_data['sgf_analyzer']
 
@@ -261,6 +261,7 @@ def stat_kifu():
 @ kifu_api.route('/stat/user', methods=['GET'])
 def stat_user_kifu():
     # users = User.query.filter_by(id=6).all()
+    result = db.engine.execute("update user set win=0,fail=0;")
     users = User.query.all()
     for user in users:
         kifus = Kifu.query.order_by(desc(Kifu.create_date)).filter_by(
