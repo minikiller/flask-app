@@ -195,6 +195,8 @@ def addUser():
             isadmin=False,
             avatar=avatar,
             create_date=now_time,
+            win=0,
+            fail=0
         )
 
         db.session.add(new_user)
