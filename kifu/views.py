@@ -302,6 +302,10 @@ def post_drops_kifus(kifu_id):
         return jsonify({'message': 'No kifu found!'})
     # begin to save analysed kifu
     data = request.get_json()
-    kifu.drops_data = data['drops_data']
+    info = data['drops_data']
+    str = ""
+    for _info in info:
+        str = str+"步数：{}，胜率下降{:.2f}% ;".format(_info[0], _info[1])
+    kifu.drops_data = str
     db.session.commit()
     return jsonify({'message': 'Drops kifu saved succeed!'})
