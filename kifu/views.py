@@ -86,6 +86,7 @@ def saveData(kifus):
         kifu_data['is_share'] = kifu.is_share
         kifu_data['is_analyse'] = kifu.is_analyse
         kifu_data['analyse_data'] = kifu.analyse_data
+        kifu_data['drops_data'] = kifu.drops_data
         kifu_data['create_date'] = kifu.create_date.strftime(
             '%Y-%m-%d %H:%M:%S')
         output.append(kifu_data)
@@ -101,11 +102,12 @@ def get_kifus_byid(kifu_id):
     output = saveData(kifus)
     return jsonify({'kifus': output})
 
-    """胜率分析
 
-    Returns:
-        [type]: [description]
-    """
+"""胜率分析
+
+Returns:
+    [type]: [description]
+"""
 
 
 @ kifu_api.route('/winrate/<kifu_id>', methods=['GET'])
@@ -288,3 +290,18 @@ def stat_user_kifu():
                 result.fail += 1
             db.session.commit()
     return jsonify({'message': 'stat is ok'})
+
+# 统计最高掉胜率的五步棋
+
+
+@ kifu_api.route('/drops/<kifu_id>', methods=['POST'])
+# @ token_required
+def post_drops_kifus(kifu_id):
+    kifu = Kifu.query.filter_by(id=kifu_id).first()
+    if not kifu:
+        return jsonify({'message': 'No kifu found!'})
+    # begin to save analysed kifu
+    data = request.get_json()
+    kifu.drops_data = data['drops_data']
+    db.session.commit()
+    return jsonify({'message': 'Drops kifu saved succeed!'})
