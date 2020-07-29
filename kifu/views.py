@@ -10,13 +10,13 @@ from sqlalchemy import desc
 import subprocess
 from util.sgflib import SGFParser
 import settings
-from yaml import load
+from yaml import load,FullLoader
 
 # leela_target_path = "/home/sunlingfeng/project/vi/"
 # ai_str = "python {}sgfanalyze.py {} --leela ./leela_0110_linux_x64 1>{}"
 AI_STR = "python3 sgfanalyze.py {} --bot leela-zero"
 with open(settings.PATH_TO_CONFIG) as yaml_stream:
-    yaml_data = load(yaml_stream)
+    yaml_data = load(yaml_stream, Loader=FullLoader)
 
 SGF_ANALYZER = yaml_data['sgf_analyzer']
 
@@ -287,3 +287,23 @@ def stat_user_kifu():
                 result.fail += 1
             db.session.commit()
     return jsonify({'message': 'stat is ok'})
+
+
+"""
+分页
+GET https://localhost:5000/kifus/page?page=1&per_page=5
+"""
+
+
+@ kifu_api.route('/page', methods=['GET'])
+@ token_required
+def get_all_users_page(current_user):
+    page = int(request.args.get('page', 1))
+    per_page = int(request.args.get('per_page', 10))
+
+    paginate = Kifu.query.paginate(page, per_page, error_out=False)
+
+    output = saveData(kifu_data, kifu)
+
+    result = {"total": paginate.total, "data": output}
+    return jsonify(result)
