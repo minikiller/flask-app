@@ -12,10 +12,14 @@ while not  cursor.atEnd:
 
 print(move_num) """
 
-from yaml import load
-import settings as settings
-with open(settings.PATH_TO_CONFIG) as yaml_stream:
-    yaml_data = load(yaml_stream)
+# from yaml import load
+# import settings as settings
+# with open(settings.PATH_TO_CONFIG) as yaml_stream:
+#     yaml_data = load(yaml_stream)
 
-CONFIG = yaml_data['config']
-print(CONFIG)
+# CONFIG = yaml_data['config']
+# print(CONFIG)
+
+f = ['c', 1.00034]
+# for i in f:
+print("this {} is {:.2f}".format(f[0], f[1]))

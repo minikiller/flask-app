@@ -10,7 +10,11 @@ from sqlalchemy import desc
 import subprocess
 from util.sgflib import SGFParser
 import settings
+<<<<<<< HEAD
 from yaml import load,FullLoader
+=======
+from yaml import load, FullLoader
+>>>>>>> 63503bd4e3c350989e5e55f54aa2bb5cee658459
 
 # leela_target_path = "/home/sunlingfeng/project/vi/"
 # ai_str = "python {}sgfanalyze.py {} --leela ./leela_0110_linux_x64 1>{}"
@@ -86,6 +90,7 @@ def saveData(kifus):
         kifu_data['is_share'] = kifu.is_share
         kifu_data['is_analyse'] = kifu.is_analyse
         kifu_data['analyse_data'] = kifu.analyse_data
+        kifu_data['drops_data'] = kifu.drops_data
         kifu_data['create_date'] = kifu.create_date.strftime(
             '%Y-%m-%d %H:%M:%S')
         output.append(kifu_data)
@@ -101,11 +106,12 @@ def get_kifus_byid(kifu_id):
     output = saveData(kifus)
     return jsonify({'kifus': output})
 
-    """胜率分析
 
-    Returns:
-        [type]: [description]
-    """
+"""胜率分析
+
+Returns:
+    [type]: [description]
+"""
 
 
 @ kifu_api.route('/winrate/<kifu_id>', methods=['GET'])
@@ -261,6 +267,7 @@ def stat_kifu():
 @ kifu_api.route('/stat/user', methods=['GET'])
 def stat_user_kifu():
     # users = User.query.filter_by(id=6).all()
+    result = db.engine.execute("update user set win=0,fail=0;")
     users = User.query.all()
     for user in users:
         kifus = Kifu.query.order_by(desc(Kifu.create_date)).filter_by(
@@ -307,3 +314,21 @@ def get_all_users_page(current_user):
 
     result = {"total": paginate.total, "data": output}
     return jsonify(result)
+# 统计最高掉胜率的五步棋
+
+
+@ kifu_api.route('/drops/<kifu_id>', methods=['POST'])
+# @ token_required
+def post_drops_kifus(kifu_id):
+    kifu = Kifu.query.filter_by(id=kifu_id).first()
+    if not kifu:
+        return jsonify({'message': 'No kifu found!'})
+    # begin to save analysed kifu
+    data = request.get_json()
+    info = data['drops_data']
+    str = ""
+    for _info in info:
+        str = str+"步数：{}，胜率下降{:.2f}% ;".format(_info[0], _info[1])
+    kifu.drops_data = str
+    db.session.commit()
+    return jsonify({'message': 'Drops kifu saved succeed!'})

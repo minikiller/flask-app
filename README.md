@@ -14,7 +14,8 @@ ALTER TABLE kifu ADD column is_analyse boolean NOT NULL default 0;
 ALTER TABLE kifu ADD column analyse_data char(2500);
 ALTER TABLE kifu ADD column moves INTEGER NOT NULL default 0; 
 ALTER TABLE user ADD column win INTEGER NOT NULL default 0; 
-ALTER TABLE user ADD column fail INTEGER NOT NULL default 0; 
+ALTER TABLE user ADD column fail INTEGER NOT NULL default 0;
+ALTER TABLE kifu ADD column drops_data char(500); 
 
 ### leela zero
 

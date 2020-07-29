@@ -11,7 +11,7 @@ Content-Type: application/json
 GET https://bibiweiqi.com:5000/kifus/analyse/36
 
 ###
-GET https://localhost:5000/kifus/analyse/36
+GET https://localhost:5000/kifus/get/68
 
 ###
-GET https://bibiweiqi.com:5000/kifus/stat
+GET https://bibiweiqi.com:5000/kifus/get/68
