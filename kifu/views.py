@@ -10,11 +10,7 @@ from sqlalchemy import desc
 import subprocess
 from util.sgflib import SGFParser
 import settings
-<<<<<<< HEAD
-from yaml import load,FullLoader
-=======
 from yaml import load, FullLoader
->>>>>>> 63503bd4e3c350989e5e55f54aa2bb5cee658459
 
 # leela_target_path = "/home/sunlingfeng/project/vi/"
 # ai_str = "python {}sgfanalyze.py {} --leela ./leela_0110_linux_x64 1>{}"
@@ -314,6 +310,8 @@ def get_all_users_page(current_user):
 
     result = {"total": paginate.total, "data": output}
     return jsonify(result)
+
+
 # 统计最高掉胜率的五步棋
 
 
