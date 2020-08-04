@@ -327,7 +327,7 @@ def post_drops_kifus(kifu_id):
 
     sgf_data = SGFParser(kifu.kifu_data).parse()
     cursor = sgf_data.cursor()
-    users = getOpponent()
+    users = getOpponent(cursor)
 
     str = ""
     for _info in info:
