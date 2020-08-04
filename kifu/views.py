@@ -363,8 +363,8 @@ def getSteps(value, cursor):
 
 
 def getOpponent(cursor):
-    black = cursor.node['PB']
-    white = cursor.node['PW']
+    black = cursor.node['PB'].data
+    white = cursor.node['PW'].data
     b = black.split("&")
     w = white.split("&")
     return b + w
