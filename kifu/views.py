@@ -348,10 +348,12 @@ def getSteps(value, cursor):
     while not cursor.atEnd:
         if "B" in cursor.node:
             if value in cursor.node["B"]:
+                print("find value {}, step is {}".format(value, cursor.node_num))
                 return cursor.node_num
                 break
         elif "W" in cursor.node:
             if value in cursor.node["W"]:
+                print("find value {}, step is {}".format(value, cursor.node_num))
                 return cursor.node_num
                 break
         # if 'qp' in cursor.node["B"] or 'qp' in cursor.node["W"]:
@@ -373,6 +375,8 @@ def getOpponent(cursor):
 
 
 def getStepUser(*user, step):
+    print("user list is {}".format(user))
+    print("step is {}".format(step))
     i = step % 4
     if i == 0:
         return user[3]
