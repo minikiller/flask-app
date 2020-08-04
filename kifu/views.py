@@ -10,7 +10,11 @@ from sqlalchemy import desc
 import subprocess
 from util.sgflib import SGFParser
 import settings
+<<<<<<< HEAD
+from yaml import load,FullLoader
+=======
 from yaml import load, FullLoader
+>>>>>>> 63503bd4e3c350989e5e55f54aa2bb5cee658459
 
 # leela_target_path = "/home/sunlingfeng/project/vi/"
 # ai_str = "python {}sgfanalyze.py {} --leela ./leela_0110_linux_x64 1>{}"
@@ -291,6 +295,25 @@ def stat_user_kifu():
             db.session.commit()
     return jsonify({'message': 'stat is ok'})
 
+
+"""
+分页
+GET https://localhost:5000/kifus/page?page=1&per_page=5
+"""
+
+
+@ kifu_api.route('/page', methods=['GET'])
+@ token_required
+def get_all_users_page(current_user):
+    page = int(request.args.get('page', 1))
+    per_page = int(request.args.get('per_page', 10))
+
+    paginate = Kifu.query.paginate(page, per_page, error_out=False)
+
+    output = saveData(kifu_data, kifu)
+
+    result = {"total": paginate.total, "data": output}
+    return jsonify(result)
 # 统计最高掉胜率的五步棋
 
 
