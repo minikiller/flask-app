@@ -303,9 +303,61 @@ def post_drops_kifus(kifu_id):
     # begin to save analysed kifu
     data = request.get_json()
     info = data['drops_data']
+
+    sgf_data = SGFParser(kifu.kifu_data).parse()
+    cursor = sgf_data.cursor()
+    users = getOpponent()
+
     str = ""
     for _info in info:
-        str = str+"步数：{}，胜率下降{:.2f}% ;".format(_info[0], _info[1])
+        steps = getSteps(_info[0], cursor)
+        user = getStepUser(*users, steps)
+        str = str + \
+            "步数：{}，坐标: {}, 胜率下降: {:.2f}%, 对手: {} \n;".format(
+                steps, _info[0], _info[1], user)
     kifu.drops_data = str
     db.session.commit()
     return jsonify({'message': 'Drops kifu saved succeed!'})
+
+# 通过坐标获得棋谱的手数
+
+
+def getSteps(value, cursor):
+    cursor.reset()
+    while not cursor.atEnd:
+        if "B" in cursor.node:
+            if value in cursor.node["B"]:
+                return cursor.node_num
+                break
+        elif "W" in cursor.node:
+            if value in cursor.node["W"]:
+                return cursor.node_num
+                break
+        # if 'qp' in cursor.node["B"] or 'qp' in cursor.node["W"]:
+        #     print(cursor.node_num)
+        #     break
+        cursor.next()
+
+# 通过棋谱的基本信息获得对局中信息
+
+
+def getOpponent(cursor):
+    black = cursor.node['PB']
+    white = cursor.node['PW']
+    b = black.split("&")
+    w = white.split("&")
+    return b + w
+
+# 通过步数获得是谁落子的
+
+
+def getStepUser(*user, step):
+    i = step % 4
+    if i == 0:
+        return user[3]
+    elif i == 1:
+        return user[0]
+    elif i == 2:
+        return user[1]
+    elif i == 3:
+        return user[2]
