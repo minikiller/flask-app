@@ -331,12 +331,12 @@ def post_drops_kifus(kifu_id):
     users = getOpponent(cursor)
 
     str = ""
-    for _info in info:
+    for i, _info in enumerate(info):
         steps = getSteps(_info[0], cursor)
         user = getStepUser(steps, *users)
         str = str + \
-            "步数：{}，坐标: {}, 胜率下降: {:.2f}%, 棋手: {};\n".format(
-                steps, _info[0], _info[1], user)
+            "序号: {}, 步数：{},坐标: {}, 胜率下降: {:.2f}%, 棋手: {};\n".format(
+                i+1, steps, _info[0], _info[1], user)
         print(str)
     kifu.drops_data = str
     db.session.commit()
