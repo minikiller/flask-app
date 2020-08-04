@@ -9,6 +9,7 @@ import os
 from sqlalchemy import desc
 import subprocess
 from util.sgflib import SGFParser
+import util.sgfutils as sgfUtils
 import settings
 from yaml import load, FullLoader
 
@@ -332,10 +333,11 @@ def post_drops_kifus(kifu_id):
     str = ""
     for _info in info:
         steps = getSteps(_info[0], cursor)
-        user = getStepUser(*users, steps)
+        user = getStepUser(steps, *users)
         str = str + \
-            "步数：{}，坐标: {}, 胜率下降: {:.2f}%, 对手: {} \n;".format(
+            "步数：{}，坐标: {}, 胜率下降: {:.2f}%, 对手: {};\n".format(
                 steps, _info[0], _info[1], user)
+        print(str)
     kifu.drops_data = str
     db.session.commit()
     return jsonify({'message': 'Drops kifu saved succeed!'})
@@ -343,7 +345,8 @@ def post_drops_kifus(kifu_id):
 # 通过坐标获得棋谱的手数
 
 
-def getSteps(value, cursor):
+def getSteps(_value, cursor):
+    value = sgfUtils.parse_position(19, _value)
     cursor.reset()
     while not cursor.atEnd:
         if "B" in cursor.node:
@@ -374,7 +377,7 @@ def getOpponent(cursor):
 # 通过步数获得是谁落子的
 
 
-def getStepUser(*user, step):
+def getStepUser(step, *user):
     print("user list is {}".format(user))
     print("step is {}".format(step))
     i = step % 4
