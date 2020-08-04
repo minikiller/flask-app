@@ -335,7 +335,7 @@ def post_drops_kifus(kifu_id):
         steps = getSteps(_info[0], cursor)
         user = getStepUser(steps, *users)
         str = str + \
-            "步数：{}，坐标: {}, 胜率下降: {:.2f}%, 对手: {};\n".format(
+            "步数：{}，坐标: {}, 胜率下降: {:.2f}%, 棋手: {};\n".format(
                 steps, _info[0], _info[1], user)
         print(str)
     kifu.drops_data = str
