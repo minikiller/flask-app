@@ -76,22 +76,26 @@ def get_all_kifus(current_user):
 def saveData(kifus):
     output = []
     for kifu in kifus:
-        kifu_data = {}
-        kifu_data['id'] = kifu.id
-        kifu_data['kifu_data'] = kifu.kifu_data
-        kifu_data['user_id'] = kifu.user_id
-        kifu_data['black_info'] = kifu.black_info
-        kifu_data['white_info'] = kifu.white_info
-        kifu_data['result'] = kifu.result
-        kifu_data['moves'] = kifu.moves
-        kifu_data['is_share'] = kifu.is_share
-        kifu_data['is_analyse'] = kifu.is_analyse
-        kifu_data['analyse_data'] = kifu.analyse_data
-        kifu_data['drops_data'] = kifu.drops_data
-        kifu_data['create_date'] = kifu.create_date.strftime(
-            '%Y-%m-%d %H:%M:%S')
-        output.append(kifu_data)
+        output.append(saveSingleData(kifu))
     return output
+
+
+def saveSingleData(kifu):
+    kifu_data = {}
+    kifu_data['id'] = kifu.id
+    kifu_data['kifu_data'] = kifu.kifu_data
+    kifu_data['user_id'] = kifu.user_id
+    kifu_data['black_info'] = kifu.black_info
+    kifu_data['white_info'] = kifu.white_info
+    kifu_data['result'] = kifu.result
+    kifu_data['moves'] = kifu.moves
+    kifu_data['is_share'] = kifu.is_share
+    kifu_data['is_analyse'] = kifu.is_analyse
+    kifu_data['analyse_data'] = kifu.analyse_data
+    kifu_data['drops_data'] = kifu.drops_data
+    kifu_data['create_date'] = kifu.create_date.strftime(
+        '%Y-%m-%d %H:%M:%S')
+    return kifu_data
 
 
 @ kifu_api.route('/get/<kifu_id>', methods=['GET'])
@@ -304,12 +308,36 @@ GET https://localhost:5000/kifus/page?page=1&per_page=5
 def get_all_users_page(current_user):
     page = int(request.args.get('page', 1))
     per_page = int(request.args.get('per_page', 10))
-
-    paginate = Kifu.query.paginate(page, per_page, error_out=False)
-
-    output = saveData(kifu_data, kifu)
-
+    paginate = Kifu.query.order_by(desc(Kifu.create_date)).filter_by(
+        user_id=current_user.id).paginate(page, per_page, error_out=False)
+    output = []
+    for kifu in paginate.items:
+        kifu_data = {}
+        kifu_data = saveSingleData(kifu)
+        output.append(kifu_data)
     result = {"total": paginate.total, "data": output}
+
+    return jsonify(result)
+
+
+# 共享分页
+
+
+@ kifu_api.route('/share/page', methods=['GET'])
+@ token_required
+def get_share_page_kifus(current_user):
+    page = int(request.args.get('page', 1))
+    per_page = int(request.args.get('per_page', 10))
+    paginate = Kifu.query.filter_by(is_share=True).order_by(
+        desc(Kifu.create_date)).paginate(page, per_page, error_out=False)
+
+    output = []
+    for kifu in paginate.items:
+        kifu_data = {}
+        kifu_data = saveSingleData(kifu)
+        output.append(kifu_data)
+    result = {"total": paginate.total, "data": output}
+
     return jsonify(result)
 
 
