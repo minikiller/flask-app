@@ -386,6 +386,6 @@ def getStepUser(step, *user):
     elif i == 1:
         return user[0]
     elif i == 2:
-        return user[1]
-    elif i == 3:
         return user[2]
+    elif i == 3:
+        return user[1]
