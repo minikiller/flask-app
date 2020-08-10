@@ -147,7 +147,7 @@ def get_analyse_kifus(kifu_id):
         outFile.write(kifu.kifu_data)
     p = subprocess.Popen(AI_STR.format(
         file_name), shell=True, cwd=SGF_ANALYZER["path"])
-    print("a new subprocess is created, it pid is {}".format(p.pid))
+    logger.info("a new subprocess is created, it pid is {}".format(p.pid))
     return jsonify({'message': 'ai 分析的任务已经创建，请耐心等候！'})
 
 
@@ -366,9 +366,9 @@ def post_drops_kifus(kifu_id):
         steps = getSteps(_info[0], cursor)
         user = getStepUser(steps, *users)
         str = str + \
-            "序号: {}, 步数：{},坐标: {}, 胜率下降: {:.2f}%, 棋手: {};\n".format(
-                i+1, steps, _info[0], _info[1], user)
-        print(str)
+            "序号:{},棋手:{},步数:{},坐标:{},胜率下降:{:.2f}%;\n".format(
+                i+1, user, steps, _info[0], _info[1])
+        logger.info(str)
     kifu.drops_data = str
     db.session.commit()
     return jsonify({'message': 'Drops kifu saved succeed!'})
@@ -382,12 +382,14 @@ def getSteps(_value, cursor):
     while not cursor.atEnd:
         if "B" in cursor.node:
             if value in cursor.node["B"]:
-                print("find value {}, step is {}".format(value, cursor.node_num))
+                logger.info("find value {}, step is {}".format(
+                    value, cursor.node_num))
                 return cursor.node_num
                 break
         elif "W" in cursor.node:
             if value in cursor.node["W"]:
-                print("find value {}, step is {}".format(value, cursor.node_num))
+                logger.info("find value {}, step is {}".format(
+                    value, cursor.node_num))
                 return cursor.node_num
                 break
         # if 'qp' in cursor.node["B"] or 'qp' in cursor.node["W"]:
@@ -409,8 +411,8 @@ def getOpponent(cursor):
 
 
 def getStepUser(step, *user):
-    print("user list is {}".format(user))
-    print("step is {}".format(step))
+    logger.debug("user list is {}".format(user))
+    logger.debug("step is {}".format(step))
     i = step % 4
     if i == 0:
         return user[3]
