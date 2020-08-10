@@ -423,11 +423,29 @@ def getStepUser(step, *user):
     elif i == 3:
         return user[1]
 
-@kifu_api.route('/upload', methods = ['POST'])
-def upload_file():
-   if request.method == 'POST':
-        f = request.files['file']
-        f.save(secure_filename(f.filename))
-        logger.info("get file is {}".format(f.filename))
-        return jsonify({'message': 'file uploaded successfully'})
 
+def get_kifu_info(sgf_data):
+    sgf = SGFParser(sgf_data).parse()
+    cursor = sgf.cursor()
+    black = cursor.node['PB'].data[0]
+    white = cursor.node['PW'].data[0]
+    result = cursor.node['RE'].data[0] if cursor.node.get('RE') else "结果未知"
+    return black, white, result
+
+
+@kifu_api.route('/upload', methods=['POST'])
+@ token_required
+def upload_file(current_user):
+    f = request.files['file']
+    sgf_data = f.read().decode("utf-8")
+    # f.save(secure_filename(f.filename))
+    logger.info("get file is {}".format(f.filename))
+    moves = get_kifu_moves(sgf_data)
+    black_info, white_info, result = get_kifu_info(sgf_data)
+    now_time = datetime.datetime.now()
+    new_kifu = Kifu(kifu_data=sgf_data, create_date=now_time,
+                    user_id=current_user.id, black_info=black_info,
+                    white_info=white_info, result=result, moves=moves)
+    db.session.add(new_kifu)
+    db.session.commit()
+    return jsonify({'message': 'file uploaded successfully'})
