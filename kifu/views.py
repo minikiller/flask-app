@@ -12,6 +12,9 @@ from util.sgflib import SGFParser
 import util.sgfutils as sgfUtils
 import settings
 from yaml import load, FullLoader
+from werkzeug.utils import secure_filename
+from log import logger
+
 
 # leela_target_path = "/home/sunlingfeng/project/vi/"
 # ai_str = "python {}sgfanalyze.py {} --leela ./leela_0110_linux_x64 1>{}"
@@ -417,3 +420,12 @@ def getStepUser(step, *user):
         return user[2]
     elif i == 3:
         return user[1]
+
+@kifu_api.route('/upload', methods = ['POST'])
+def upload_file():
+   if request.method == 'POST':
+        f = request.files['file']
+        f.save(secure_filename(f.filename))
+        logger.info("get file is {}".format(f.filename))
+        return jsonify({'message': 'file uploaded successfully'})
+
