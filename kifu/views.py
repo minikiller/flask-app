@@ -8,11 +8,11 @@ import datetime
 import os
 from sqlalchemy import desc
 import subprocess
-from util.sgflib import SGFParser
+from util.sgflib import SGFParser, Property
 import util.sgfutils as sgfUtils
 import settings
 from yaml import load, FullLoader
-from werkzeug.utils import secure_filename
+# from werkzeug.utils import secure_filename
 from log import logger
 
 
@@ -32,7 +32,8 @@ def create_kifu(current_user):
     now_time = datetime.datetime.now()
     # .strftime('%Y-%m-%d %H:%M:%S')
     moves = get_kifu_moves(data['kifu_data'])
-    new_kifu = Kifu(kifu_data=data['kifu_data'], create_date=now_time,
+    kifu_data = set_kifu_result(data['kifu_data'], data["result"])
+    new_kifu = Kifu(kifu_data=kifu_data, create_date=now_time,
                     user_id=current_user.id, black_info=data['black_info'],
                     white_info=data['white_info'], result=data["result"], moves=moves)
     db.session.add(new_kifu)
@@ -40,6 +41,17 @@ def create_kifu(current_user):
 
     return jsonify({'message': "棋谱保存成功!"})
 
+
+"""给棋谱增加对局结果信息
+"""
+
+
+def set_kifu_result(sgf, value):
+    sgf_data = SGFParser(sgf).parse()
+    cursor = sgf_data.cursor()
+
+    cursor.node.add_property(Property('RE', [value]))
+    return sgf_data
 
 # 获得棋局的手数
 
