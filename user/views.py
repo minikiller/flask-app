@@ -158,6 +158,7 @@ def setUserData(user_data, user):
     user_data['avatar'] = user.avatar
     user_data['win'] = user.win
     user_data['fail'] = user.fail
+    user_data['background'] = user.background
     user_data['create_date'] = user.create_date.strftime(
         '%Y-%m-%d %H:%M:%S')
 
@@ -196,7 +197,8 @@ def addUser():
             avatar=avatar,
             create_date=now_time,
             win=0,
-            fail=0
+            fail=0,
+            background='wood_1024.jpg'
         )
 
         db.session.add(new_user)
@@ -275,7 +277,7 @@ def login():
         ) + datetime.timedelta(minutes=60*24)}, app.config['SECRET_KEY'])
         _rank = rank.get(user.rank, "级别不详")
         result = {'token': token.decode('UTF-8'), 'public_id': user.public_id, 'user_id': user.id, 'win': user.win, 'fail': user.fail,
-                  'name': user.name, 'avatar': user.avatar, 'isadmin': user.isadmin, 'rank': _rank}
+                  'name': user.name, 'avatar': user.avatar, 'isadmin': user.isadmin, 'rank': _rank, 'background': user.background}
         logger.info("a user is log in, name is {}, ip is {}".format(
             auth.username, request.remote_addr))
         return jsonify(result)
@@ -295,6 +297,26 @@ def change_password_user(current_user):
     db.session.commit()
 
     return jsonify({'message': '密码修改成功'})
+
+
+"""修改棋盘背景色
+
+Returns:
+    [type]: [description]
+"""
+
+
+@ user_api.route('/background', methods=['POST'])
+@ token_required
+def change_background_user(current_user):
+    data = request.get_json()
+    user = User.query.filter_by(id=current_user.id).first()
+    if not user:
+        return jsonify({'message': 'No user found!'})
+    user.background = data['background']
+    db.session.commit()
+
+    return jsonify({'message': '棋盘背景色修改成功'})
 
 
 """ @app.after_request

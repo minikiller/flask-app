@@ -16,6 +16,8 @@ ALTER TABLE kifu ADD column moves INTEGER NOT NULL default 0;
 ALTER TABLE user ADD column win INTEGER NOT NULL default 0; 
 ALTER TABLE user ADD column fail INTEGER NOT NULL default 0;
 ALTER TABLE kifu ADD column drops_data char(500); 
+ALTER TABLE user ADD column background char(50); 
+update user set background='wood_1024.jpg'
 
 ### leela zero
 
@@ -101,3 +103,7 @@ https://github.com/fohristiwhirl/leela_zero_analysis
 
 ####
 https://github.com/sanderland/katrain
+
+#### change log
+ALTER TABLE user ADD column background char(50); 
+update user set background='wood_1024.jpg'

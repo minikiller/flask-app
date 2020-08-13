@@ -32,7 +32,8 @@ class User(db.Model):
     avatar = db.Column(db.String(200))             # 用户头像照片
     create_date = db.Column(db.DateTime)
     win = db.Column(db.Integer)  # 胜利局数
-    fail = db.Column(db.Integer)   # 失败局数
+    fail = db.Column(db.Integer)  # 失败局数
+    background = db.Column(db.String(50))         # 棋盘背景色
 
 
 """游戏对局室
