@@ -1,6 +1,6 @@
 ### 用户登陆
 GET https://localhost:5000/login HTTP/1.1
-Authorization: Basic admin:1
+Authorization: Basic sunlf1:1
 
 ### 用户登陆
 GET https://localhost:5000/kifus/update HTTP/1.1
@@ -67,3 +67,12 @@ Content-Type: application/json
 GET https://localhost:5000/kifus/1 HTTP/1.1
 x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiJkNzZmNTgwMC04YjEwLTRiNWItODA3NS00M2EwOTcxMGZhMWEiLCJleHAiOjE1ODk3ODM5Njd9.W_4sZE6N7G30lL1WgQKZc8X_0AZIcU3Urj7XIvhAYNE
 
+### create a new kifu
+
+GET https://localhost:5000/games/mygames HTTP/1.1
+x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiIxNGM0OGRjNC0zMGYwLTQwNmEtOGRlNS03ZDRiOGU2ZDQ3MzAiLCJleHAiOjE1OTc3NDM2Mzh9.T4GR-XxtVSY12A6brD5p4iqhDp3sz2zHVSszgJZfdUQ
+
+### create a new kifu
+
+GET https://localhost:5000/games/history HTTP/1.1
+x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiIxNGM0OGRjNC0zMGYwLTQwNmEtOGRlNS03ZDRiOGU2ZDQ3MzAiLCJleHAiOjE1OTc3NDM2Mzh9.T4GR-XxtVSY12A6brD5p4iqhDp3sz2zHVSszgJZfdUQ

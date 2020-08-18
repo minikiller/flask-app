@@ -3,6 +3,7 @@ from flask import jsonify, request
 from model import db, Game
 from game import game_api
 from sqlalchemy import desc
+from sqlalchemy import or_
 from user.views import token_required
 import datetime
 from model import User
@@ -180,4 +181,73 @@ def delete_game(current_user, game_id):
         return jsonify({'message:[': name+']对局正在进行或者已经结束，无法删除!'})
 
 
+"""[返回我的对局]
 
+Returns:
+    [type]: [description]
+"""
+
+
+@ game_api.route('/mygames', methods=['GET'])
+@ token_required
+def get_my_all_games(current_user):
+    user = User.query.filter_by(id=current_user.id).first()
+    username = user.name
+    games = Game.query.order_by(desc(Game.create_date)).filter(
+        Game.status != '已结束',).filter(or_(Game.whiteone_id == username,
+                                          Game.whitetwo_id == username,
+                                          Game.blackone_id == username,
+                                          Game.blacktwo_id == username)).all()
+    # games = Game.query.filter_by(user_id=current_user.id).all()
+
+    output = []
+
+    for game in games:
+        game_data = {}
+        setGameData(game_data, game)
+        output.append(game_data)
+
+    return jsonify({'games': output})
+
+    """获得已经结束的棋局历史（只返回当前日期之前一个月的数据）
+
+    Returns:
+        [type]: [description]
+    """
+
+
+@ game_api.route('/history', methods=['GET'])
+@ token_required
+def get_all_history_games(current_user):
+    now_time = datetime.datetime.now()
+    befor_one_month_time = subtract_one_month(now_time)
+    games = Game.query.order_by(desc(Game.create_date)).filter(
+        Game.status == '已结束', Game.create_date > befor_one_month_time, Game.create_date < now_time,).all()
+    # games = Game.query.filter_by(user_id=current_user.id).all()
+
+    output = []
+
+    for game in games:
+        game_data = {}
+        setGameData(game_data, game)
+        output.append(game_data)
+
+    return jsonify({'games': output})
+
+
+def subtract_one_month(t):
+    """Return a `datetime.date` or `datetime.datetime` (as given) that is
+    one month later.
+
+    Note that the resultant day of the month might change if the following
+    month has fewer days:
+
+        >>> subtract_one_month(datetime.date(2010, 3, 31))
+        datetime.date(2010, 2, 28)
+    """
+    import datetime
+    one_day = datetime.timedelta(days=1)
+    one_month_earlier = t - one_day
+    while one_month_earlier.month == t.month or one_month_earlier.day > t.day:
+        one_month_earlier -= one_day
+    return one_month_earlier
