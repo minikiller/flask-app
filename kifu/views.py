@@ -51,7 +51,7 @@ def set_kifu_result(sgf, value):
     cursor = sgf_data.cursor()
 
     cursor.node.add_property(Property('RE', [value]))
-    return sgf_data
+    return str(sgf_data)
 
 # 获得棋局的手数
 
