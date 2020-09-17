@@ -20,6 +20,10 @@ print(move_num) """
 # CONFIG = yaml_data['config']
 # print(CONFIG)
 
-f = ['c', 1.00034]
-# for i in f:
-print("this {} is {:.2f}".format(f[0], f[1]))
+# f = ['c', 1.00034]
+# # for i in f:
+# print("this {} is {:.2f}".format(f[0], f[1]))
+
+from datetime import datetime
+str=datetime.now().strftime("%H:%M:%S.%f")
+print(str)

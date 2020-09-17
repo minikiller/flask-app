@@ -107,3 +107,5 @@ https://github.com/sanderland/katrain
 #### change log
 ALTER TABLE user ADD column background char(50); 
 update user set background='wood_1024.jpg'
+
+ALTER TABLE kifu ADD column comment char(2500); 

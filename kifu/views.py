@@ -19,6 +19,7 @@ from log import logger
 # leela_target_path = "/home/sunlingfeng/project/vi/"
 # ai_str = "python {}sgfanalyze.py {} --leela ./leela_0110_linux_x64 1>{}"
 AI_STR = "python3 sgfanalyze.py {} --bot leela-zero"
+AI_NEXT_STEP_STR = "python3 main.py {} --bot leela-zero"
 with open(settings.PATH_TO_CONFIG) as yaml_stream:
     yaml_data = load(yaml_stream, Loader=FullLoader)
 
@@ -104,13 +105,14 @@ def saveSingleData(kifu):
     kifu_data['white_info'] = kifu.white_info
     kifu_data['result'] = kifu.result
     kifu_data['moves'] = kifu.moves
+    kifu_data['comment'] = kifu.comment
     kifu_data['is_share'] = kifu.is_share
     kifu_data['is_analyse'] = kifu.is_analyse
     kifu_data['analyse_data'] = kifu.analyse_data
     kifu_data['drops_data'] = kifu.drops_data
     kifu_data['create_date'] = kifu.create_date.strftime(
         '%Y-%m-%d %H:%M:%S')
-    return kifu_data
+    return kifu_data    
 
 
 @ kifu_api.route('/get/<kifu_id>', methods=['GET'])
@@ -161,6 +163,29 @@ def get_analyse_kifus(kifu_id):
         file_name), shell=True, cwd=SGF_ANALYZER["path"])
     logger.info("a new subprocess is created, it pid is {}".format(p.pid))
     return jsonify({'message': 'ai 分析的任务已经创建，请耐心等候！'})
+
+
+@ kifu_api.route('/nextstep', methods=['POST'])
+# @ token_required
+def get_next_step_kifus():
+    data = request.get_json()
+    kifu_data = data['kifu_data']
+    now_time = datetime.datetime.now()
+    file_name = now_time.strftime(
+        '%Y-%m-%d-%H-%M-%S')+".sgf"
+
+    with open(SGF_ANALYZER["path"]+file_name, mode='w', encoding='utf-8') as outFile:
+        outFile.write(kifu_data)
+    p = subprocess.Popen(AI_NEXT_STEP_STR.format(
+        file_name), shell=True, cwd=SGF_ANALYZER["path"], stdout=subprocess.PIPE)
+    result = p.communicate()[0]
+    ls = result.decode().split("\n")
+    for s in ls:
+        if "result" in s:
+            result = (s.split("=")[1])
+    # print(result)
+    logger.info("a new subprocess is created, it pid is {}".format(p.pid))
+    return jsonify({'result': result})
 
 
 @ kifu_api.route('/analyse/<kifu_id>', methods=['POST'])
@@ -461,3 +486,17 @@ def upload_file(current_user):
     db.session.add(new_kifu)
     db.session.commit()
     return jsonify({'message': 'file uploaded successfully'})
+
+
+@ kifu_api.route('/comment/<kifu_id>', methods=['POST'])
+# @ token_required
+def post_comment_kifus(kifu_id):
+    kifu = Kifu.query.filter_by(id=kifu_id).first()
+    if not kifu:
+        return jsonify({'message': 'No kifu found!'})
+    # begin to save analysed kifu
+    data = request.get_json()
+    info = data['comment']
+    kifu.comment = info
+    db.session.commit()
+    return jsonify({'message': '棋谱备注添加成功'})
