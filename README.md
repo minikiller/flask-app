@@ -107,3 +107,19 @@ https://github.com/sanderland/katrain
 #### change log
 ALTER TABLE user ADD column background char(50); 
 update user set background='wood_1024.jpg'
+
+#### subprocess pipe
+
+```
+# invoke process
+process = subprocess.Popen(shlex.split(command),shell=False,stdout=process.PIPE)
+
+# Poll process.stdout to show stdout live
+while True:
+  output = process.stdout.readline()
+  if process.poll() is not None:
+    break
+  if output:
+    print output.strip()
+rc = process.poll()
+```
