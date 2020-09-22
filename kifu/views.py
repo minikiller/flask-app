@@ -450,7 +450,7 @@ def getOpponent(cursor):
 def getStepUser(step, *user):
     logger.debug("user list is {}".format(user))
     logger.debug("step is {}".format(step))
-    if user.len() == 4:  # 四人对局
+    if len(user) == 4:  # 四人对局
         i = step % 4
         if i == 0:
             return user[3]
