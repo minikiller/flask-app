@@ -463,9 +463,9 @@ def getStepUser(step, *user):
     else:  # 两人对局
         i = step % 2
         if i == 0:
-            return user[2]
-        elif i == 1:
             return user[1]
+        elif i == 1:
+            return user[0]
 
 
 def get_kifu_info(sgf_data):
