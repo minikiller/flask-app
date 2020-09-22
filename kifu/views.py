@@ -112,7 +112,7 @@ def saveSingleData(kifu):
     kifu_data['drops_data'] = kifu.drops_data
     kifu_data['create_date'] = kifu.create_date.strftime(
         '%Y-%m-%d %H:%M:%S')
-    return kifu_data    
+    return kifu_data
 
 
 @ kifu_api.route('/get/<kifu_id>', methods=['GET'])
@@ -450,15 +450,22 @@ def getOpponent(cursor):
 def getStepUser(step, *user):
     logger.debug("user list is {}".format(user))
     logger.debug("step is {}".format(step))
-    i = step % 4
-    if i == 0:
-        return user[3]
-    elif i == 1:
-        return user[0]
-    elif i == 2:
-        return user[2]
-    elif i == 3:
-        return user[1]
+    if user.len() == 4:  # 四人对局
+        i = step % 4
+        if i == 0:
+            return user[3]
+        elif i == 1:
+            return user[0]
+        elif i == 2:
+            return user[2]
+        elif i == 3:
+            return user[1]
+    else:  # 两人对局
+        i = step % 2
+        if i == 0:
+            return user[2]
+        elif i == 1:
+            return user[1]
 
 
 def get_kifu_info(sgf_data):
