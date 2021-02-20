@@ -123,3 +123,24 @@ while True:
     print output.strip()
 rc = process.poll()
 ```
+### how to run bibiweiqi
+#### download vue-bibiweiqi
+```
+git clone https://github.com/minikiller/vue-bibiweiqi
+```
+#### install redis 
+```
+redis-server
+```
+#### run socket
+```
+node app.js
+```
+#### run vuejs
+```
+npm run dev
+```
+### note
+
+本机调试的时候，需要注意，使用的是https，需要手工访问一下https://localhost:5000才可以登录
+
